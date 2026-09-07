@@ -67,3 +67,19 @@ export function slugify(text: string): string {
     .replace(/[\s_-]+/g, '-')
     .replace(/^-+|-+$/g, '');
 }
+
+export function getGmailComposeUrl(job: {
+  title?: string;
+  applyEmail?: string;
+  applySubject?: string;
+  applyBody?: string;
+}): string {
+  const recipient = job.applyEmail || 'hr@sallet.in';
+  const subject = job.applySubject || `Application for ${job.title || 'Role'} - [Your Name]`;
+  const body =
+    job.applyBody ||
+    `Dear Hiring Team,\n\nI am writing to express my interest in the ${job.title || 'open'} role at Bhubaneswar.\n\nTotal Experience: \nCurrent Location: \nNotice Period: \nLinkedIn Profile: \n\nPlease find my resume attached.\n\nBest regards,\n[Your Name]\n[Your Phone Number]`;
+
+  return `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(recipient)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+}
+

@@ -6,7 +6,7 @@ import { Job } from '../../lib/types';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { useJobContext } from '../../lib/context/JobContext';
-import { formatSalary, formatExperience, formatRelativeTime } from '../../lib/utils';
+import { formatSalary, formatExperience, formatRelativeTime, getGmailComposeUrl } from '../../lib/utils';
 import {
   Building2,
   MapPin,
@@ -62,18 +62,29 @@ export function JobCard({ job, onApplyClick, layout = 'default' }: JobCardProps)
               {job.location}
             </span>
             <span className="font-semibold text-indigo-700 dark:text-indigo-400">
-              {formatSalary(job.salaryMinLPA, job.salaryMaxLPA, job.isSalaryDisclosed)}
+              {job.salary || formatSalary(job.salaryMinLPA, job.salaryMaxLPA, job.isSalaryDisclosed)}
             </span>
           </div>
         </div>
 
         <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-800">
           <span className="text-[11px] text-slate-400 dark:text-slate-500">{formatRelativeTime(job.postedAt)}</span>
-          <Link href={`/jobs/${job.id}`}>
-            <Button variant="ghost" size="sm" className="text-xs font-semibold">
-              View Details
-            </Button>
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link href={`/jobs/${job.id}`}>
+              <Button variant="ghost" size="sm" className="text-xs font-semibold">
+                View Details
+              </Button>
+            </Link>
+            <a
+              href={getGmailComposeUrl(job)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Button variant="primary" size="sm" className="text-xs font-semibold">
+                Apply via Gmail &rarr;
+              </Button>
+            </a>
+          </div>
         </div>
       </div>
     );
@@ -154,12 +165,12 @@ export function JobCard({ job, onApplyClick, layout = 'default' }: JobCardProps)
 
           <div className="flex items-center gap-1.5 font-semibold text-indigo-700 dark:text-indigo-400">
             <IndianRupee className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
-            <span>{formatSalary(job.salaryMinLPA, job.salaryMaxLPA, job.isSalaryDisclosed)}</span>
+            <span>{job.salary || formatSalary(job.salaryMinLPA, job.salaryMaxLPA, job.isSalaryDisclosed)}</span>
           </div>
 
           <div className="flex items-center gap-1.5 font-medium">
             <Briefcase className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500 shrink-0" />
-            <span>{formatExperience(job.minExperienceYears, job.maxExperienceYears)}</span>
+            <span>{job.experience || formatExperience(job.minExperienceYears, job.maxExperienceYears)}</span>
           </div>
 
           <div className="flex items-center gap-1.5">
@@ -167,14 +178,14 @@ export function JobCard({ job, onApplyClick, layout = 'default' }: JobCardProps)
               {job.workMode}
             </Badge>
             <Badge variant="subtle" size="sm" className="capitalize text-[11px]">
-              {job.jobType.replace('-', ' ')}
+              {job.type || job.jobType.replace('-', ' ')}
             </Badge>
           </div>
         </div>
 
         {/* Short Description */}
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 line-clamp-2 mb-3.5 leading-relaxed">
-          {job.description}
+          {job.about || job.description}
         </p>
 
         {/* Skill Tags */}
@@ -209,27 +220,19 @@ export function JobCard({ job, onApplyClick, layout = 'default' }: JobCardProps)
             </Button>
           </Link>
 
-          {applied ? (
-            <Link href="/candidate/applications">
-              <Button
-                variant="accent"
-                size="sm"
-                className="text-xs bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 hover:bg-emerald-100 dark:hover:bg-emerald-900/60 border border-emerald-300 dark:border-emerald-800 shadow-none"
-                leftIcon={<CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" />}
-              >
-                Applied
-              </Button>
-            </Link>
-          ) : (
+          <a
+            href={getGmailComposeUrl(job)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Button
               variant="primary"
               size="sm"
               className="text-xs font-semibold"
-              onClick={() => onApplyClick ? onApplyClick(job) : null}
             >
-              Apply Now
+              Apply via Gmail &rarr;
             </Button>
-          )}
+          </a>
         </div>
       </div>
     </div>

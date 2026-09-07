@@ -4,7 +4,7 @@ import React from 'react';
 import { JobFilterParams, WorkMode, JobType } from '../../lib/types';
 import { RangeSlider } from '../ui/RangeSlider';
 import { Button } from '../ui/Button';
-import { RotateCcw, MapPin, Briefcase, IndianRupee, Laptop, Calendar, Filter } from 'lucide-react';
+import { RotateCcw, Briefcase, IndianRupee, Laptop, Calendar, Filter } from 'lucide-react';
 
 interface JobFiltersProps {
   filters: JobFilterParams;
@@ -13,16 +13,6 @@ interface JobFiltersProps {
   totalResultsCount?: number;
 }
 
-const POPULAR_LOCATIONS = [
-  'Bhubaneswar',
-  'Cuttack',
-  'Bengaluru',
-  'Hyderabad',
-  'Pune',
-  'Mumbai',
-  'Delhi NCR',
-  'Remote',
-];
 
 const EXPERIENCE_LEVELS: Array<{ label: string; value: string }> = [
   { label: 'Fresher (0 yrs)', value: 'fresher' },
@@ -59,14 +49,6 @@ export function JobFilters({
   onReset,
   totalResultsCount,
 }: JobFiltersProps) {
-  const handleLocationToggle = (loc: string) => {
-    const current = filters.locations || [];
-    const updated = current.includes(loc)
-      ? current.filter((l) => l !== loc)
-      : [...current, loc];
-    onChange({ ...filters, locations: updated });
-  };
-
   const handleExpToggle = (exp: string) => {
     const current = filters.experienceLevel || [];
     const updated = current.includes(exp)
@@ -92,7 +74,6 @@ export function JobFilters({
   };
 
   const hasActiveFilters =
-    (filters.locations && filters.locations.length > 0) ||
     (filters.experienceLevel && filters.experienceLevel.length > 0) ||
     (filters.workModes && filters.workModes.length > 0) ||
     (filters.jobTypes && filters.jobTypes.length > 0) ||
@@ -118,35 +99,8 @@ export function JobFilters({
         )}
       </div>
 
-      {/* Location Filter */}
-      <div className="space-y-2.5">
-        <label className="flex items-center gap-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
-          <MapPin className="w-3.5 h-3.5 text-slate-400" />
-          Location
-        </label>
-        <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
-          {POPULAR_LOCATIONS.map((loc) => {
-            const isChecked = filters.locations?.includes(loc) || false;
-            return (
-              <label
-                key={loc}
-                className="flex items-center gap-2.5 text-xs text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white cursor-pointer select-none py-0.5"
-              >
-                <input
-                  type="checkbox"
-                  checked={isChecked}
-                  onChange={() => handleLocationToggle(loc)}
-                  className="rounded border-slate-300 dark:border-slate-700 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
-                />
-                <span>{loc}</span>
-              </label>
-            );
-          })}
-        </div>
-      </div>
-
       {/* Salary Slider */}
-      <div className="space-y-2.5 pt-2 border-t border-slate-100 dark:border-slate-800">
+      <div className="space-y-2.5">
         <label className="flex items-center gap-1.5 text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider">
           <IndianRupee className="w-3.5 h-3.5 text-slate-400" />
           Min Salary (LPA)

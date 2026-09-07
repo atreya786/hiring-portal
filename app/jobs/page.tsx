@@ -27,8 +27,6 @@ function JobsContent() {
 
   const [filters, setFilters] = useState<JobFilterParams>({
     query: searchParams.get('query') || '',
-    location: searchParams.get('location') || '',
-    locations: searchParams.get('location') ? [searchParams.get('location')!] : [],
     experienceLevel: [],
     minSalary: 0,
     jobTypes: [],
@@ -57,8 +55,6 @@ function JobsContent() {
   const handleResetFilters = () => {
     setFilters({
       query: '',
-      location: '',
-      locations: [],
       experienceLevel: [],
       minSalary: 0,
       jobTypes: [],
@@ -74,9 +70,9 @@ function JobsContent() {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-16">
+    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen pb-16">
       {/* Search Bar Header */}
-      <div className="bg-white border-b border-slate-200/80 py-4 px-4 sm:px-6 lg:px-8 shadow-2xs">
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-200/80 dark:border-slate-800 py-4 px-4 sm:px-6 lg:px-8 shadow-2xs">
         <div className="max-w-7xl mx-auto space-y-3">
           <Breadcrumbs
             items={[
@@ -88,14 +84,12 @@ function JobsContent() {
           <div className="pt-1">
             <JobSearchHero
               initialQuery={filters.query}
-              initialLocation={filters.location}
               compact
-              onSearch={(q, loc) => {
+              showLocationSelector={false}
+              onSearch={(q) => {
                 setFilters((prev) => ({
                   ...prev,
                   query: q,
-                  location: loc,
-                  locations: loc ? [loc] : [],
                 }));
               }}
             />
@@ -106,23 +100,21 @@ function JobsContent() {
       {/* Main Content Area */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
         {/* Mobile Filter & Sort Trigger Bar */}
-        <div className="lg:hidden flex items-center justify-between gap-3 mb-4 bg-white p-3 rounded-xl border border-slate-200">
+        <div className="lg:hidden flex items-center justify-between gap-3 mb-4 bg-white dark:bg-slate-900 p-3 rounded-xl border border-slate-200 dark:border-slate-800">
           <Button
             variant="outline"
             size="sm"
             onClick={() => setMobileFilterOpen(true)}
-            leftIcon={<Filter className="w-4 h-4 text-indigo-600" />}
+            leftIcon={<Filter className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />}
             className="text-xs font-bold"
           >
             Filters
-            {(filters.locations?.length || 0) +
-              (filters.experienceLevel?.length || 0) +
+            {(filters.experienceLevel?.length || 0) +
               (filters.workModes?.length || 0) +
               (filters.jobTypes?.length || 0) >
               0 && (
               <span className="ml-1 bg-indigo-600 text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center font-bold">
-                {(filters.locations?.length || 0) +
-                  (filters.experienceLevel?.length || 0) +
+                {(filters.experienceLevel?.length || 0) +
                   (filters.workModes?.length || 0) +
                   (filters.jobTypes?.length || 0)}
               </span>
@@ -139,7 +131,7 @@ function JobsContent() {
                   sortBy: e.target.value as any,
                 }))
               }
-              className="text-xs font-semibold bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5 text-slate-800 focus:outline-none"
+              className="text-xs font-semibold bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 text-slate-800 dark:text-slate-200 focus:outline-none"
             >
               <option value="relevance">Relevance</option>
               <option value="newest">Newest First</option>
@@ -160,9 +152,9 @@ function JobsContent() {
               totalResultsCount={jobs.length}
             />
 
-            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-4 rounded-2xl border border-indigo-100 space-y-2">
+            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/40 p-4 rounded-2xl border border-indigo-100 dark:border-indigo-900/60 space-y-2">
               <AiComingSoonBadge featureName="Smart Job Matching" />
-              <p className="text-xs text-slate-600 leading-relaxed">
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 Sallet AI will automatically calculate match percentages against your resume in Phase 2.
               </p>
             </div>
@@ -171,21 +163,16 @@ function JobsContent() {
           {/* Job Results (Right Column) */}
           <div className="lg:col-span-3 space-y-4">
             {/* Header: Count and Desktop Sorting */}
-            <div className="hidden lg:flex items-center justify-between pb-2 border-b border-slate-200/80">
+            <div className="hidden lg:flex items-center justify-between pb-2 border-b border-slate-200/80 dark:border-slate-800">
               <div className="flex items-center gap-2">
-                <h1 className="text-lg font-bold text-slate-900">
+                <h1 className="text-lg font-bold text-slate-900 dark:text-white">
                   {loading ? 'Searching...' : `${jobs.length} Jobs Available`}
                 </h1>
-                {filters.location && (
-                  <span className="text-xs font-semibold text-slate-500 bg-slate-200/70 px-2.5 py-0.5 rounded-full">
-                    in {filters.location}
-                  </span>
-                )}
               </div>
 
               <div className="flex items-center gap-2">
-                <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
-                <span className="text-xs font-semibold text-slate-500">Sort by:</span>
+                <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
+                <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Sort by:</span>
                 <select
                   value={filters.sortBy || 'relevance'}
                   onChange={(e) =>
@@ -194,7 +181,7 @@ function JobsContent() {
                       sortBy: e.target.value as any,
                     }))
                   }
-                  className="text-xs font-semibold bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-slate-800 focus:outline-none focus:border-indigo-500 shadow-2xs cursor-pointer"
+                  className="text-xs font-semibold bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg px-3 py-1.5 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500 shadow-2xs cursor-pointer"
                 >
                   <option value="relevance">Relevance</option>
                   <option value="newest">Newest First</option>

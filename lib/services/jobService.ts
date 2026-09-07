@@ -1,7 +1,7 @@
 import { Job, JobFilterParams, JobStatus } from '../types';
 import { INITIAL_JOBS } from '../mock-data';
 
-const STORAGE_KEY_JOBS = 'sallet_jobs_v1';
+const STORAGE_KEY_JOBS = 'sallet_jobs_v2';
 
 function getStoredJobs(): Job[] {
   if (typeof window === 'undefined') return INITIAL_JOBS;

@@ -6,26 +6,21 @@ import { Search, MapPin, ArrowRight, Sparkles, TrendingUp, X } from 'lucide-reac
 import { Button } from '../ui/Button';
 
 const SUGGESTIONS = [
-  'Senior React / Next.js Developer',
-  'Backend Engineer (Node.js & Go)',
-  'Senior Data Analyst (SQL & Python)',
-  'DevOps & Cloud Engineer (AWS / Kubernetes)',
-  'Product Designer (UI/UX & Design Systems)',
-  'Full Stack Engineer (MERN / Python)',
-  'Junior Software Engineer (Fresher / Trainee)',
-  'Enterprise B2B Sales Executive',
-  'Application Security Engineer',
-  'Mobile App Developer (React Native)',
+  'Full Stack Developer',
+  'IT Sales Executive',
+  'HR Manager',
+  'Next.js / React Developer',
+  'Backend & APIs (Node.js)',
+  'B2B IT Sales & Outreach',
+  'Human Resources & Talent Acquisition',
 ];
 
 const POPULAR_SEARCH_TAGS = [
-  { label: 'React Developer', query: 'React' },
-  { label: 'Next.js', query: 'Next.js' },
-  { label: 'Fresher Jobs', query: 'Fresher' },
-  { label: 'Bhubaneswar Jobs', location: 'Bhubaneswar' },
-  { label: 'Data Analyst', query: 'Data' },
-  { label: 'DevOps & AWS', query: 'DevOps' },
-  { label: 'Remote Only', location: 'Remote' },
+  { label: 'Full Stack Developer', query: 'Full Stack Developer' },
+  { label: 'IT Sales Executive', query: 'IT Sales Executive' },
+  { label: 'HR Manager', query: 'HR Manager' },
+  { label: 'Engineering', query: 'Engineering' },
+  { label: 'Sales', query: 'Sales' },
 ];
 
 export function JobSearchHero({
@@ -33,11 +28,13 @@ export function JobSearchHero({
   initialLocation = '',
   onSearch,
   compact = false,
+  showLocationSelector = false,
 }: {
   initialQuery?: string;
   initialLocation?: string;
   onSearch?: (q: string, loc: string) => void;
   compact?: boolean;
+  showLocationSelector?: boolean;
 }) {
   const [query, setQuery] = useState(initialQuery);
   const [location, setLocation] = useState(initialLocation);
@@ -140,29 +137,25 @@ export function JobSearchHero({
           )}
         </div>
 
-        {/* Divider on Desktop */}
-        <div className="hidden md:block w-px h-8 bg-slate-200 dark:bg-slate-800 my-auto" />
+        {showLocationSelector && (
+          <>
+            {/* Divider on Desktop */}
+            <div className="hidden md:block w-px h-8 bg-slate-200 dark:bg-slate-800 my-auto" />
 
-        {/* Location Selector */}
-        <div className="flex-1 md:max-w-xs relative flex items-center min-w-0 px-3 py-1.5 md:py-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
-          <MapPin className="w-5 h-5 text-slate-400 mr-2.5 shrink-0" />
-          <select
-            value={location}
-            onChange={(e) => setLocation(e.target.value)}
-            className="w-full bg-transparent text-sm sm:text-base text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer"
-          >
-            <option value="" className="dark:bg-slate-900 dark:text-slate-100">All Locations / Remote</option>
-            <option value="Bhubaneswar" className="dark:bg-slate-900 dark:text-slate-100">Bhubaneswar, Odisha</option>
-            <option value="Cuttack" className="dark:bg-slate-900 dark:text-slate-100">Cuttack, Odisha</option>
-            <option value="Bengaluru" className="dark:bg-slate-900 dark:text-slate-100">Bengaluru, Karnataka</option>
-            <option value="Hyderabad" className="dark:bg-slate-900 dark:text-slate-100">Hyderabad, Telangana</option>
-            <option value="Pune" className="dark:bg-slate-900 dark:text-slate-100">Pune, Maharashtra</option>
-            <option value="Mumbai" className="dark:bg-slate-900 dark:text-slate-100">Mumbai, Maharashtra</option>
-            <option value="Delhi NCR" className="dark:bg-slate-900 dark:text-slate-100">Delhi NCR / Gurugram</option>
-            <option value="Noida" className="dark:bg-slate-900 dark:text-slate-100">Noida, UP</option>
-            <option value="Remote" className="dark:bg-slate-900 dark:text-slate-100">Remote Only</option>
-          </select>
-        </div>
+            {/* Location Selector */}
+            <div className="flex-1 md:max-w-xs relative flex items-center min-w-0 px-3 py-1.5 md:py-0 border-t md:border-t-0 border-slate-100 dark:border-slate-800">
+              <MapPin className="w-5 h-5 text-slate-400 mr-2.5 shrink-0" />
+              <select
+                value={location}
+                onChange={(e) => setLocation(e.target.value)}
+                className="w-full bg-transparent text-sm sm:text-base text-slate-800 dark:text-slate-200 focus:outline-none cursor-pointer"
+              >
+                <option value="" className="dark:bg-slate-900 dark:text-slate-100">All Locations / Remote</option>
+                <option value="Bhubaneswar" className="dark:bg-slate-900 dark:text-slate-100">Bhubaneswar, Odisha</option>
+              </select>
+            </div>
+          </>
+        )}
 
         {/* Action Button */}
         <Button

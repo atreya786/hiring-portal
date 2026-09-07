@@ -86,6 +86,15 @@ export interface Job {
   applicantCount: number;
   isFeatured?: boolean;
   isUrgent?: boolean;
+  type?: string;
+  experience?: string;
+  qualification?: string;
+  salary?: string;
+  about?: string;
+  niceToHave?: string[];
+  applyEmail?: string;
+  applySubject?: string;
+  applyBody?: string;
 }
 
 export interface WorkExperience {

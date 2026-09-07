@@ -13,7 +13,7 @@ import { Breadcrumbs } from '../../../components/ui/Breadcrumbs';
 import { Badge } from '../../../components/ui/Badge';
 import { Button } from '../../../components/ui/Button';
 import { AiComingSoonBadge } from '../../../components/demo/DemoBadge';
-import { formatSalary, formatExperience, formatRelativeTime, formatDate } from '../../../lib/utils';
+import { formatSalary, formatExperience, formatRelativeTime, formatDate, getGmailComposeUrl } from '../../../lib/utils';
 import {
   Building2,
   MapPin,
@@ -31,6 +31,7 @@ import {
   Sparkles,
   ArrowLeft,
   Check,
+  GraduationCap,
 } from 'lucide-react';
 
 export default function JobDetailPage() {
@@ -107,9 +108,9 @@ export default function JobDetailPage() {
   };
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-24 lg:pb-16">
+    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen pb-24 lg:pb-16">
       {/* Top Header Card */}
-      <div className="bg-white border-b border-slate-200/80 pt-6 pb-8 px-4 sm:px-6 lg:px-8 shadow-2xs">
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-200/80 dark:border-slate-800 pt-6 pb-8 px-4 sm:px-6 lg:px-8 shadow-2xs">
         <div className="max-w-7xl mx-auto space-y-4">
           <div className="flex items-center justify-between">
             <Breadcrumbs
@@ -121,7 +122,7 @@ export default function JobDetailPage() {
             />
             <Link
               href="/jobs"
-              className="text-xs font-semibold text-slate-500 hover:text-indigo-600 flex items-center gap-1 transition-colors"
+              className="text-xs font-semibold text-slate-500 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 flex items-center gap-1 transition-colors"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               <span>Back to search</span>
@@ -133,7 +134,7 @@ export default function JobDetailPage() {
             <div className="flex items-start gap-4 sm:gap-5">
               <Link
                 href={`/companies/${job.companyId}`}
-                className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-50 border border-slate-200 p-2 flex items-center justify-center overflow-hidden shrink-0 shadow-xs hover:scale-105 transition-transform"
+                className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 p-2 flex items-center justify-center overflow-hidden shrink-0 shadow-xs hover:scale-105 transition-transform"
               >
                 <img
                   src={job.companyLogo}
@@ -146,7 +147,7 @@ export default function JobDetailPage() {
                 <div className="flex items-center gap-2">
                   <Link
                     href={`/companies/${job.companyId}`}
-                    className="text-sm sm:text-base font-bold text-slate-700 hover:text-indigo-600 transition-colors"
+                    className="text-sm sm:text-base font-bold text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                   >
                     {job.companyName}
                   </Link>
@@ -158,26 +159,35 @@ export default function JobDetailPage() {
                   {job.isFeatured && <Badge variant="purple" size="sm">Featured</Badge>}
                 </div>
 
-                <h1 className="text-xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+                <h1 className="text-xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">
                   {job.title}
                 </h1>
 
                 {/* Key metadata pills */}
-                <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs sm:text-sm text-slate-600 pt-1">
+                <div className="flex flex-wrap items-center gap-y-2 gap-x-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 pt-1">
                   <span className="flex items-center gap-1.5 font-medium">
-                    <MapPin className="w-4 h-4 text-slate-400" />
+                    <MapPin className="w-4 h-4 text-slate-400 dark:text-slate-500" />
                     {job.location}
                   </span>
-                  <span className="flex items-center gap-1.5 font-bold text-indigo-700">
-                    <IndianRupee className="w-4 h-4 text-indigo-500" />
-                    {formatSalary(job.salaryMinLPA, job.salaryMaxLPA, job.isSalaryDisclosed)}
+                  <span className="flex items-center gap-1.5 font-bold text-indigo-700 dark:text-indigo-400">
+                    <IndianRupee className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+                    {job.salary || formatSalary(job.salaryMinLPA, job.salaryMaxLPA, job.isSalaryDisclosed)}
                   </span>
                   <span className="flex items-center gap-1.5 font-medium">
-                    <Briefcase className="w-4 h-4 text-slate-400" />
-                    {formatExperience(job.minExperienceYears, job.maxExperienceYears)}
+                    <Briefcase className="w-4 h-4 text-slate-400 dark:text-slate-500" />
+                    {job.experience || formatExperience(job.minExperienceYears, job.maxExperienceYears)}
                   </span>
+                  {job.qualification && (
+                    <span className="flex items-center gap-1.5 font-medium text-emerald-700 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-950/50 px-2 py-0.5 rounded-md border border-emerald-200 dark:border-emerald-800/60">
+                      <GraduationCap className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                      {job.qualification}
+                    </span>
+                  )}
                   <Badge variant="secondary" size="md" className="capitalize">
                     {job.workMode}
+                  </Badge>
+                  <Badge variant="subtle" size="md" className="capitalize">
+                    {job.type || job.jobType.replace('-', ' ')}
                   </Badge>
                 </div>
               </div>
@@ -189,8 +199,8 @@ export default function JobDetailPage() {
                 onClick={() => toggleSave(job.id, job.title)}
                 className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
                   saved
-                    ? 'bg-indigo-50 border-indigo-200 text-indigo-600'
-                    : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
+                    ? 'bg-indigo-50 dark:bg-indigo-950/60 border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400'
+                    : 'bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700'
                 }`}
                 title={saved ? 'Bookmarked' : 'Save Job'}
                 aria-label={saved ? 'Bookmarked' : 'Save Job'}
@@ -200,34 +210,26 @@ export default function JobDetailPage() {
 
               <button
                 onClick={handleShare}
-                className="p-2.5 rounded-xl border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition-all cursor-pointer"
+                className="p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all cursor-pointer"
                 title="Share Job"
                 aria-label="Share Job"
               >
                 <Share2 className="w-5 h-5" />
               </button>
 
-              {applied ? (
-                <Link href="/candidate/applications">
-                  <Button
-                    variant="accent"
-                    size="lg"
-                    className="font-bold px-6 bg-emerald-50 text-emerald-700 border border-emerald-300 shadow-none hover:bg-emerald-100"
-                    leftIcon={<CheckCircle2 className="w-5 h-5 text-emerald-600" />}
-                  >
-                    Applied (Track Status)
-                  </Button>
-                </Link>
-              ) : (
+              <a
+                href={getGmailComposeUrl(job)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <Button
                   variant="primary"
                   size="lg"
-                  className="font-bold px-8 shadow-lg shadow-indigo-600/25"
-                  onClick={() => setIsApplyModalOpen(true)}
+                  className="font-bold px-8 shadow-lg shadow-indigo-600/25 cursor-pointer"
                 >
-                  Apply for this Role
+                  Apply via Gmail &rarr;
                 </Button>
-              )}
+              </a>
             </div>
           </div>
         </div>
@@ -239,24 +241,35 @@ export default function JobDetailPage() {
           {/* Left Column: Job Description & Details */}
           <div className="lg:col-span-2 space-y-8">
             {/* About The Role */}
-            <div className="bg-white rounded-2xl p-6 sm:p-8 border border-slate-200/80 shadow-2xs space-y-6">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <h2 className="text-lg font-bold text-slate-900">About the Role</h2>
-                <span className="text-xs text-slate-400">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-2xs space-y-6">
+              <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">
+                <h2 className="text-lg font-bold text-slate-900 dark:text-white">About the Role</h2>
+                <span className="text-xs text-slate-400 dark:text-slate-500">
                   Posted {formatDate(job.postedAt)} &bull; {job.openings} Openings
                 </span>
               </div>
 
-              <div className="prose prose-slate max-w-none text-xs sm:text-sm text-slate-600 leading-relaxed">
-                <p>{job.description}</p>
+              <div className="prose prose-slate dark:prose-invert max-w-none text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                <p>{job.about || job.description}</p>
               </div>
+
+              {/* Qualification highlight if available */}
+              {job.qualification && (
+                <div className="p-4 bg-indigo-50/70 dark:bg-indigo-950/40 rounded-xl border border-indigo-100 dark:border-indigo-900/50 flex items-center gap-3">
+                  <GraduationCap className="w-5 h-5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                  <div>
+                    <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Required Qualification</span>
+                    <p className="text-sm font-bold text-slate-900 dark:text-white">{job.qualification}</p>
+                  </div>
+                </div>
+              )}
 
               {/* Responsibilities */}
               <div className="space-y-3 pt-2">
-                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                   Key Responsibilities
                 </h3>
-                <ul className="space-y-2.5 text-xs sm:text-sm text-slate-600">
+                <ul className="space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
                   {job.responsibilities.map((resp, idx) => (
                     <li key={idx} className="flex items-start gap-2.5">
                       <span className="w-1.5 h-1.5 rounded-full bg-indigo-600 mt-2 shrink-0" />
@@ -267,11 +280,11 @@ export default function JobDetailPage() {
               </div>
 
               {/* Requirements */}
-              <div className="space-y-3 pt-2">
-                <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-                  Requirements & Qualifications
+              <div className="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                  Requirements
                 </h3>
-                <ul className="space-y-2.5 text-xs sm:text-sm text-slate-600">
+                <ul className="space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
                   {job.requirements.map((req, idx) => (
                     <li key={idx} className="flex items-start gap-2.5">
                       <Check className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
@@ -281,17 +294,34 @@ export default function JobDetailPage() {
                 </ul>
               </div>
 
-              {/* Required & Nice-to-have Skills */}
-              <div className="space-y-4 pt-2 border-t border-slate-100">
+              {/* Nice to Have */}
+              {job.niceToHave && job.niceToHave.length > 0 && (
+                <div className="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                    Nice to Have
+                  </h3>
+                  <ul className="space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                    {job.niceToHave.map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-2.5">
+                        <Sparkles className="w-4 h-4 text-amber-500 mt-0.5 shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Required Skills */}
+              <div className="space-y-4 pt-2 border-t border-slate-100 dark:border-slate-800">
                 <div>
-                  <h3 className="text-xs font-bold text-slate-800 uppercase tracking-wider mb-2.5">
+                  <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-2.5">
                     Required Skills & Technologies
                   </h3>
                   <div className="flex flex-wrap gap-2">
                     {job.requiredSkills.map((skill) => (
                       <span
                         key={skill}
-                        className="text-xs font-bold bg-indigo-50 text-indigo-700 border border-indigo-200/60 px-3 py-1.5 rounded-lg"
+                        className="text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-800/60 px-3 py-1.5 rounded-lg"
                       >
                         {skill}
                       </span>
@@ -301,14 +331,14 @@ export default function JobDetailPage() {
 
                 {job.preferredSkills && job.preferredSkills.length > 0 && (
                   <div>
-                    <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-2.5">
-                      Nice-to-Have Skills
+                    <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2.5">
+                      Additional Skills
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {job.preferredSkills.map((skill) => (
                         <span
                           key={skill}
-                          className="text-xs font-medium bg-slate-100 text-slate-700 px-3 py-1.5 rounded-lg"
+                          className="text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg"
                         >
                           {skill}
                         </span>
@@ -318,25 +348,27 @@ export default function JobDetailPage() {
                 )}
               </div>
 
-              {/* Benefits & Perks */}
-              {job.benefits && job.benefits.length > 0 && (
-                <div className="space-y-3 pt-2 border-t border-slate-100">
-                  <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">
-                    Benefits & Perks
-                  </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                    {job.benefits.map((b, idx) => (
-                      <div
-                        key={idx}
-                        className="flex items-center gap-2 text-xs font-semibold text-slate-700 bg-slate-50 p-2.5 rounded-lg border border-slate-100"
-                      >
-                        <Award className="w-4 h-4 text-indigo-600 shrink-0" />
-                        <span>{b}</span>
-                      </div>
-                    ))}
-                  </div>
+              {/* Apply via Gmail CTA inside details */}
+              <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
+                <div>
+                  <p className="text-sm font-bold text-slate-900 dark:text-white">Interested in this position?</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">Send your resume and details directly to hr@sallet.in</p>
                 </div>
-              )}
+                <a
+                  href={getGmailComposeUrl(job)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="shrink-0"
+                >
+                  <Button
+                    variant="primary"
+                    size="md"
+                    className="font-bold px-6 shadow-md shadow-indigo-600/20 cursor-pointer"
+                  >
+                    Apply via Gmail &rarr;
+                  </Button>
+                </a>
+              </div>
             </div>
 
             {/* About Company Card */}
@@ -386,61 +418,68 @@ export default function JobDetailPage() {
 
           {/* Right Column: Sticky Summary & Apply Card */}
           <div className="hidden lg:block lg:col-span-1 sticky top-24 space-y-4">
-            <div className="bg-white rounded-2xl p-6 border border-slate-200/80 shadow-md space-y-5">
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 border border-slate-200/80 dark:border-slate-800 shadow-md space-y-5">
               <div>
-                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider">
+                <span className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
                   Compensation
                 </span>
-                <p className="text-2xl font-black text-indigo-700 mt-0.5">
-                  {formatSalary(job.salaryMinLPA, job.salaryMaxLPA, job.isSalaryDisclosed)}
+                <p className="text-2xl font-black text-indigo-700 dark:text-indigo-400 mt-0.5">
+                  {job.salary || formatSalary(job.salaryMinLPA, job.salaryMaxLPA, job.isSalaryDisclosed)}
                 </p>
               </div>
 
-              <div className="space-y-3 pt-3 border-t border-slate-100 text-xs text-slate-600">
+              <div className="space-y-3 pt-3 border-t border-slate-100 dark:border-slate-800 text-xs text-slate-600 dark:text-slate-300">
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400">Experience Required</span>
-                  <span className="font-bold text-slate-800">
-                    {formatExperience(job.minExperienceYears, job.maxExperienceYears)}
+                  <span className="text-slate-400 dark:text-slate-500">Location</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200 text-right">
+                    {job.location}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400">Job Type</span>
-                  <span className="font-bold text-slate-800 capitalize">
-                    {job.jobType.replace('-', ' ')}
+                  <span className="text-slate-400 dark:text-slate-500">Experience Required</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200">
+                    {job.experience || formatExperience(job.minExperienceYears, job.maxExperienceYears)}
+                  </span>
+                </div>
+                {job.qualification && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400 dark:text-slate-500">Qualification</span>
+                    <span className="font-bold text-emerald-600 dark:text-emerald-400">
+                      {job.qualification}
+                    </span>
+                  </div>
+                )}
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400 dark:text-slate-500">Job Type</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200 capitalize">
+                    {job.type || job.jobType.replace('-', ' ')}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400">Work Mode</span>
-                  <span className="font-bold text-slate-800 capitalize">{job.workMode}</span>
+                  <span className="text-slate-400 dark:text-slate-500">Work Mode</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200 capitalize">{job.workMode}</span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-slate-400">Total Applicants</span>
-                  <span className="font-bold text-indigo-600">{job.applicantCount} candidates</span>
+                  <span className="text-slate-400 dark:text-slate-500">Total Applicants</span>
+                  <span className="font-bold text-indigo-600 dark:text-indigo-400">{job.applicantCount} candidates</span>
                 </div>
               </div>
 
               <div className="pt-2 space-y-2.5">
-                {applied ? (
-                  <Link href="/candidate/applications" className="block">
-                    <Button
-                      variant="accent"
-                      size="lg"
-                      className="w-full font-bold bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100"
-                      leftIcon={<CheckCircle2 className="w-5 h-5 text-emerald-600" />}
-                    >
-                      View Application Status
-                    </Button>
-                  </Link>
-                ) : (
+                <a
+                  href={getGmailComposeUrl(job)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
                   <Button
                     variant="primary"
                     size="lg"
-                    className="w-full font-bold shadow-md shadow-indigo-600/25"
-                    onClick={() => setIsApplyModalOpen(true)}
+                    className="w-full font-bold shadow-md shadow-indigo-600/25 cursor-pointer"
                   >
-                    Apply Now
+                    Apply via Gmail &rarr;
                   </Button>
-                )}
+                </a>
 
                 <Button
                   variant="outline"
@@ -453,15 +492,15 @@ export default function JobDetailPage() {
                 </Button>
               </div>
 
-              <p className="text-[11px] text-slate-400 text-center leading-relaxed">
-                Direct application &bull; Resumes are delivered immediately to hiring managers.
+              <p className="text-[11px] text-slate-400 dark:text-slate-500 text-center leading-relaxed">
+                Direct application &bull; Resumes are delivered immediately to hr@sallet.in.
               </p>
             </div>
 
             {/* AI Placeholder Card */}
-            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 p-5 rounded-2xl border border-indigo-100 space-y-2">
+            <div className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-950/40 dark:to-purple-950/40 p-5 rounded-2xl border border-indigo-100 dark:border-indigo-900/60 space-y-2">
               <AiComingSoonBadge featureName="AI Resume Match" />
-              <p className="text-xs text-slate-600 leading-relaxed">
+              <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                 Coming in Phase 2: Instant skill-gap analysis and tailored recommendations for your application.
               </p>
             </div>
@@ -470,46 +509,40 @@ export default function JobDetailPage() {
       </div>
 
       {/* Mobile Sticky Bottom Apply Bar */}
-      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white border-t border-slate-200 p-3 px-4 z-30 shadow-2xl flex items-center justify-between gap-3">
+      <div className="lg:hidden fixed bottom-0 inset-x-0 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 p-3 px-4 z-30 shadow-2xl flex items-center justify-between gap-3">
         <div>
-          <p className="text-xs font-extrabold text-indigo-700 leading-tight">
-            {formatSalary(job.salaryMinLPA, job.salaryMaxLPA, job.isSalaryDisclosed)}
+          <p className="text-xs font-extrabold text-indigo-700 dark:text-indigo-400 leading-tight">
+            {job.salary || formatSalary(job.salaryMinLPA, job.salaryMaxLPA, job.isSalaryDisclosed)}
           </p>
-          <p className="text-[11px] text-slate-500 truncate max-w-[160px]">{job.companyName}</p>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-[160px]">{job.companyName}</p>
         </div>
 
         <div className="flex items-center gap-2">
           <button
             onClick={() => toggleSave(job.id, job.title)}
-            className={`p-2.5 rounded-xl border transition-all ${
-              saved ? 'bg-indigo-50 border-indigo-200 text-indigo-600' : 'bg-slate-50 border-slate-200 text-slate-500'
+            className={`p-2.5 rounded-xl border transition-all cursor-pointer ${
+              saved
+                ? 'bg-indigo-50 dark:bg-indigo-950/60 border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400'
+                : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400'
             }`}
             aria-label={saved ? 'Saved' : 'Save'}
           >
             <Bookmark className={`w-4 h-4 ${saved ? 'fill-indigo-600' : ''}`} />
           </button>
 
-          {applied ? (
-            <Link href="/candidate/applications">
-              <Button
-                variant="accent"
-                size="md"
-                className="font-bold text-xs bg-emerald-50 text-emerald-700 border border-emerald-300"
-                leftIcon={<CheckCircle2 className="w-4 h-4" />}
-              >
-                Track Status
-              </Button>
-            </Link>
-          ) : (
+          <a
+            href={getGmailComposeUrl(job)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Button
               variant="primary"
               size="md"
-              className="font-bold text-xs px-6 shadow-md"
-              onClick={() => setIsApplyModalOpen(true)}
+              className="font-bold text-xs px-6 shadow-md cursor-pointer"
             >
-              Apply Now
+              Apply via Gmail &rarr;
             </Button>
-          )}
+          </a>
         </div>
       </div>
 
