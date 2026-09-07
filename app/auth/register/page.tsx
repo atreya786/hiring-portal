@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '../../../lib/context/AuthContext';
 import { useToast } from '../../../lib/context/ToastContext';
@@ -40,8 +41,15 @@ export default function RegisterPage() {
     <div className="min-h-[80vh] flex items-center justify-center p-4 sm:p-6 bg-slate-50">
       <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200/90 shadow-xl p-6 sm:p-8 space-y-6">
         <div className="text-center space-y-2">
-          <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center font-black text-xl mx-auto shadow-md shadow-indigo-200">
-            S
+          <div className="w-16 h-16 mx-auto flex items-center justify-center">
+            <Image
+              src="/logo.png"
+              alt="Sallet Hire"
+              width={64}
+              height={64}
+              className="w-16 h-16 object-contain"
+              priority
+            />
           </div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">Join Sallet Hire</h1>
           <p className="text-xs sm:text-sm text-slate-500">

@@ -83,7 +83,7 @@ export default function PostJobPage() {
       const newJob = await createJob({
         companyId: 'comp_sallet',
         companyName: 'Sallet Technologies',
-        companyLogo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=128&auto=format&fit=crop&q=80',
+        companyLogo: '/logo.png',
         companyVerified: true,
         title: title || 'Senior Software Engineer',
         slug: (title || 'senior-software-engineer').toLowerCase().replace(/\s+/g, '-'),

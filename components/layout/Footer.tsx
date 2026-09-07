@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ShieldCheck, MapPin, Mail, Phone, ExternalLink, Heart } from 'lucide-react';
 import { DemoBadge } from '../demo/DemoBadge';
 
@@ -38,8 +39,14 @@ export function Footer() {
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-black text-base shadow-md shadow-indigo-900/50">
-                S
+              <div className="relative w-8 h-8 flex items-center justify-center">
+                <Image
+                  src="/logo.png"
+                  alt="Sallet Hire"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8 object-contain"
+                />
               </div>
               <span className="text-xl font-extrabold tracking-tight text-white">
                 Sallet<span className="text-indigo-400">Hire</span>

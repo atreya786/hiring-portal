@@ -12,7 +12,7 @@ export function JobPreviewCard({ jobData }: JobPreviewCardProps) {
     id: 'preview_id',
     companyId: 'comp_sallet',
     companyName: 'Sallet Technologies',
-    companyLogo: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=128&auto=format&fit=crop&q=80',
+    companyLogo: '/logo.png',
     companyVerified: true,
     title: jobData.title || 'Untitled Position',
     slug: 'preview-job',
