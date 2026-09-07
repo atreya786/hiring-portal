@@ -74,30 +74,30 @@ export default function HomePage() {
   return (
     <div className="flex flex-col min-h-screen">
       {/* 1. Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-indigo-900/5 via-white to-slate-50 pt-12 sm:pt-16 pb-16 sm:pb-24 border-b border-slate-200/70">
+      <section className="relative overflow-hidden bg-gradient-to-b from-indigo-900/5 via-white to-slate-50 dark:from-indigo-950/30 dark:via-slate-950 dark:to-slate-950 pt-12 sm:pt-16 pb-16 sm:pb-24 border-b border-slate-200/70 dark:border-slate-800">
         {/* Subtle decorative grid background */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-40 pointer-events-none" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-40 pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl mx-auto text-center space-y-5">
             {/* Top Pill */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 border border-indigo-200/80 text-indigo-700 text-xs font-bold shadow-2xs">
-              <span className="flex h-2 w-2 rounded-full bg-indigo-600 animate-ping" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200/80 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 text-xs font-bold shadow-2xs">
+              <span className="flex h-2 w-2 rounded-full bg-indigo-600 dark:bg-indigo-400 animate-ping" />
               <span>Next-Gen Hiring Platform</span>
-              <span className="text-slate-300">&bull;</span>
-              <span className="text-slate-600 font-medium">Bhubaneswar &bull; Bengaluru &bull; Nationwide</span>
+              <span className="text-slate-300 dark:text-slate-600">&bull;</span>
+              <span className="text-slate-600 dark:text-slate-400 font-medium">Bhubaneswar &bull; Bengaluru &bull; Nationwide</span>
             </div>
 
             {/* Main Headline */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 tracking-tight leading-[1.1]">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-slate-900 dark:text-white tracking-tight leading-[1.1]">
               Find the right opportunity.{' '}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-indigo-700 to-slate-900">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-indigo-700 to-slate-900 dark:from-indigo-400 dark:via-indigo-300 dark:to-slate-100">
                 Build your career.
               </span>
             </h1>
 
             {/* Sub-headline */}
-            <p className="text-sm sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
               Discover verified jobs from high-growth tech companies, build a standout resume, and track applications in real time without the clutter.
             </p>
 
@@ -167,20 +167,20 @@ export default function HomePage() {
       </section>
 
       {/* 3. Featured Jobs Section */}
-      <section className="py-16 sm:py-20 bg-slate-50/50">
+      <section className="py-16 sm:py-20 bg-slate-50/50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-xs font-bold uppercase tracking-wider text-indigo-600">
+                <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                   Featured Opportunities
                 </span>
                 <AiComingSoonBadge featureName="Smart Job Matching" />
               </div>
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                 Recommended Handpicked Jobs
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
                 Curated high-impact roles from verified employers in IT, Product, and Engineering.
               </p>
             </div>
@@ -213,16 +213,16 @@ export default function HomePage() {
       </section>
 
       {/* 4. Popular Job Categories */}
-      <section className="py-16 sm:py-20 bg-white border-y border-slate-200/80">
+      <section className="py-16 sm:py-20 bg-white dark:bg-slate-900 border-y border-slate-200/80 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
           <div className="text-center max-w-2xl mx-auto space-y-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-indigo-600">
+            <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
               Browse by Domain
             </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
               Popular Career Categories
             </h2>
-            <p className="text-xs sm:text-sm text-slate-500">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
               Find specialized roles across top technology and business functions.
             </p>
           </div>
@@ -234,16 +234,16 @@ export default function HomePage() {
                 <Link
                   key={cat.title}
                   href={cat.href}
-                  className="p-5 rounded-2xl border border-slate-200/80 bg-slate-50/50 hover:bg-white hover:border-indigo-300 hover:shadow-lg transition-all duration-200 group flex items-start gap-4"
+                  className="p-5 rounded-2xl border border-slate-200/80 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40 hover:bg-white dark:hover:bg-slate-800 hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-lg transition-all duration-200 group flex items-start gap-4"
                 >
-                  <div className="p-3 rounded-xl bg-indigo-50 border border-indigo-100 text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-colors shrink-0">
+                  <div className="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-100 dark:border-indigo-800/60 text-indigo-600 dark:text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white transition-colors shrink-0">
                     <Icon className="w-5 h-5" />
                   </div>
                   <div className="min-w-0">
-                    <h3 className="text-sm font-bold text-slate-900 group-hover:text-indigo-600 transition-colors leading-tight">
+                    <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors leading-tight">
                       {cat.title}
                     </h3>
-                    <p className="text-xs text-slate-500 mt-1">{cat.count}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">{cat.count}</p>
                   </div>
                 </Link>
               );
@@ -253,17 +253,17 @@ export default function HomePage() {
       </section>
 
       {/* 5. Featured Companies Showcase */}
-      <section className="py-16 sm:py-20 bg-slate-50/50">
+      <section className="py-16 sm:py-20 bg-slate-50/50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-indigo-600">
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                 Top Hiring Partners
               </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                 Featured Verified Companies
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
                 Learn about engineering culture, compensation, and open positions directly from verified employers.
               </p>
             </div>
@@ -284,49 +284,49 @@ export default function HomePage() {
       </section>
 
       {/* 6. Why Sallet Hire & Dual How It Works Flows */}
-      <section className="py-16 sm:py-24 bg-white border-y border-slate-200/80">
+      <section className="py-16 sm:py-24 bg-white dark:bg-slate-900 border-y border-slate-200/80 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
           {/* Why Choose Us */}
           <div className="space-y-10">
             <div className="text-center max-w-2xl mx-auto space-y-2">
-              <span className="text-xs font-bold uppercase tracking-wider text-indigo-600">
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                 The Sallet Advantage
               </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                 Why Professionals & Recruiters Choose Sallet Hire
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500">
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
                 Built to solve the frustrations of traditional portals: no spam postings, zero fake vacancies, and transparent timelines.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
-                <div className="w-12 h-12 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-600 flex items-center justify-center">
+              <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/80 space-y-3">
+                <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900">100% Verified Opportunities</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">100% Verified Opportunities</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                   Every company and opening undergoes stringent manual verification. Zero ghost jobs, outdated listings, or duplicate spam.
                 </p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
-                <div className="w-12 h-12 rounded-xl bg-indigo-50 border border-indigo-200 text-indigo-600 flex items-center justify-center">
+              <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/80 space-y-3">
+                <div className="w-12 h-12 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 border border-indigo-200 dark:border-indigo-800 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
                   <Zap className="w-6 h-6" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900">Frictionless 1-Click Applications</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">Frictionless 1-Click Applications</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                   Store multiple customized resume templates and apply instantly with verified profiles. No repetitive 15-page application forms.
                 </p>
               </div>
 
-              <div className="p-6 rounded-2xl bg-slate-50 border border-slate-200/80 space-y-3">
-                <div className="w-12 h-12 rounded-xl bg-purple-50 border border-purple-200 text-purple-600 flex items-center justify-center">
+              <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-800/50 border border-slate-200/80 dark:border-slate-700/80 space-y-3">
+                <div className="w-12 h-12 rounded-xl bg-purple-50 dark:bg-purple-950/60 border border-purple-200 dark:border-purple-800 text-purple-600 dark:text-purple-400 flex items-center justify-center">
                   <Award className="w-6 h-6" />
                 </div>
-                <h3 className="text-base font-bold text-slate-900">Live Application Tracking</h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
+                <h3 className="text-base font-bold text-slate-900 dark:text-white">Live Application Tracking</h3>
+                <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
                   Track every stage in real time: Submitted &rarr; Screened &rarr; Shortlisted &rarr; Interview &rarr; Offer. Always know where you stand.
                 </p>
               </div>
@@ -334,43 +334,43 @@ export default function HomePage() {
           </div>
 
           {/* How It Works - Dual Workflows */}
-          <div className="pt-6 border-t border-slate-100 space-y-10">
+          <div className="pt-6 border-t border-slate-100 dark:border-slate-800 space-y-10">
             <div className="text-center max-w-xl mx-auto">
-              <h3 className="text-xl sm:text-2xl font-black text-slate-900">
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
                 Simple & Transparent Workflows
               </h3>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* Candidate Path */}
-              <div className="bg-gradient-to-br from-indigo-50/70 to-slate-50 p-6 sm:p-8 rounded-2xl border border-indigo-100 space-y-5">
+              <div className="bg-gradient-to-br from-indigo-50/70 to-slate-50 dark:from-indigo-950/40 dark:to-slate-800/50 p-6 sm:p-8 rounded-2xl border border-indigo-100 dark:border-indigo-900/50 space-y-5">
                 <div className="flex items-center gap-2">
                   <Badge variant="default" size="md">For Job Seekers</Badge>
-                  <h4 className="text-base font-bold text-slate-900">Find Your Next Role in 4 Steps</h4>
+                  <h4 className="text-base font-bold text-slate-900 dark:text-white">Find Your Next Role in 4 Steps</h4>
                 </div>
                 <ol className="space-y-3.5 text-xs sm:text-sm">
                   <li className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">1</span>
                     <div>
-                      <strong className="text-slate-900">Create Profile & Resume:</strong> Build your technical profile and choose a professional resume template.
+                      <strong className="text-slate-900 dark:text-white">Create Profile & Resume:</strong> Build your technical profile and choose a professional resume template.
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">2</span>
                     <div>
-                      <strong className="text-slate-900">Discover Opportunities:</strong> Filter by salary LPA, experience level, location, and hybrid modes.
+                      <strong className="text-slate-900 dark:text-white">Discover Opportunities:</strong> Filter by salary LPA, experience level, location, and hybrid modes.
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">3</span>
                     <div>
-                      <strong className="text-slate-900">Apply Instantly:</strong> Submit your application directly to recruiter ATS dashboards with 1 click.
+                      <strong className="text-slate-900 dark:text-white">Apply Instantly:</strong> Submit your application directly to recruiter ATS dashboards with 1 click.
                     </div>
                   </li>
                   <li className="flex items-start gap-3">
                     <span className="w-6 h-6 rounded-full bg-indigo-600 text-white font-bold text-xs flex items-center justify-center shrink-0">4</span>
                     <div>
-                      <strong className="text-slate-900">Track Progress:</strong> Receive live updates as your status moves to Shortlist and Interview.
+                      <strong className="text-slate-900 dark:text-white">Track Progress:</strong> Receive live updates as your status moves to Shortlist and Interview.
                     </div>
                   </li>
                 </ol>
@@ -417,17 +417,17 @@ export default function HomePage() {
       </section>
 
       {/* 7. Career Resources / Blog Preview */}
-      <section className="py-16 sm:py-20 bg-slate-50/50">
+      <section className="py-16 sm:py-20 bg-slate-50/50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-indigo-600">
+              <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
                 Career Insights
               </span>
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
                 Latest Articles & Interview Guides
               </h2>
-              <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
                 Actionable playbooks for frontend interviews, ATS resume optimization, and tech salary benchmarks.
               </p>
             </div>

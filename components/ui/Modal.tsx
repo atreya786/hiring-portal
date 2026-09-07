@@ -64,26 +64,26 @@ export function Modal({
       {/* Modal Card */}
       <div
         className={cn(
-          'relative w-full bg-white rounded-2xl shadow-2xl border border-slate-100 overflow-hidden z-10 my-8 transition-all animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]',
+          'relative w-full bg-white dark:bg-slate-900 rounded-2xl shadow-2xl border border-slate-100 dark:border-slate-800 overflow-hidden z-10 my-8 transition-all animate-in zoom-in-95 duration-200 flex flex-col max-h-[90vh]',
           maxWidths[maxWidth]
         )}
       >
         {(title || showCloseButton) && (
-          <div className="flex items-start justify-between p-5 sm:p-6 border-b border-slate-100 bg-slate-50/50">
+          <div className="flex items-start justify-between p-5 sm:p-6 border-b border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50">
             <div>
               {title && typeof title === 'string' ? (
-                <h3 className="text-lg font-bold text-slate-900 leading-tight">{title}</h3>
+                <h3 className="text-lg font-bold text-slate-900 dark:text-white leading-tight">{title}</h3>
               ) : (
                 title
               )}
               {description && (
-                <p className="text-xs sm:text-sm text-slate-500 mt-1">{description}</p>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">{description}</p>
               )}
             </div>
             {showCloseButton && (
               <button
                 onClick={onClose}
-                className="text-slate-400 hover:text-slate-700 hover:bg-slate-100 p-1.5 rounded-lg transition-colors ml-4 cursor-pointer"
+                className="text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 p-1.5 rounded-lg transition-colors ml-4 cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5" />

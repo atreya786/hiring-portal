@@ -7,10 +7,10 @@ import { formatDate } from '../../lib/utils';
 
 export function ArticleCard({ article }: { article: Article }) {
   return (
-    <article className="bg-white rounded-2xl border border-slate-200/80 overflow-hidden hover:border-indigo-300 hover:shadow-lg transition-all duration-200 flex flex-col justify-between group">
+    <article className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 overflow-hidden hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-lg transition-all duration-200 flex flex-col justify-between group">
       <div>
         {/* Cover Image */}
-        <div className="h-44 w-full bg-slate-100 overflow-hidden relative">
+        <div className="h-44 w-full bg-slate-100 dark:bg-slate-800 overflow-hidden relative">
           <img
             src={article.coverImage}
             alt={article.title}
@@ -25,7 +25,7 @@ export function ArticleCard({ article }: { article: Article }) {
 
         {/* Content */}
         <div className="p-5 space-y-2.5">
-          <div className="flex items-center gap-3 text-xs text-slate-400">
+          <div className="flex items-center gap-3 text-xs text-slate-400 dark:text-slate-500">
             <span className="flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5" />
               {formatDate(article.publishedAt)}
@@ -38,27 +38,27 @@ export function ArticleCard({ article }: { article: Article }) {
           </div>
 
           <Link href={`/resources/${article.id}`}>
-            <h3 className="text-base font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-2 leading-snug">
+            <h3 className="text-base font-bold text-slate-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors line-clamp-2 leading-snug">
               {article.title}
             </h3>
           </Link>
 
-          <p className="text-xs sm:text-sm text-slate-500 line-clamp-2 leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed">
             {article.description}
           </p>
         </div>
       </div>
 
       {/* Author & Read More */}
-      <div className="px-5 pb-5 pt-2 flex items-center justify-between border-t border-slate-100 text-xs">
+      <div className="px-5 pb-5 pt-2 flex items-center justify-between border-t border-slate-100 dark:border-slate-800 text-xs">
         <div className="flex flex-col">
-          <span className="font-bold text-slate-900">{article.authorName}</span>
-          <span className="text-[10px] text-slate-400">{article.authorRole}</span>
+          <span className="font-bold text-slate-900 dark:text-slate-200">{article.authorName}</span>
+          <span className="text-[10px] text-slate-400 dark:text-slate-500">{article.authorRole}</span>
         </div>
 
         <Link
           href={`/resources/${article.id}`}
-          className="text-xs font-bold text-indigo-600 flex items-center gap-1 group-hover:translate-x-1 transition-transform"
+          className="text-xs font-bold text-indigo-600 dark:text-indigo-400 flex items-center gap-1 group-hover:translate-x-1 transition-transform"
         >
           <span>Read Article</span>
           <ArrowRight className="w-3.5 h-3.5" />
