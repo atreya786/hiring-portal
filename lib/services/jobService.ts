@@ -27,7 +27,23 @@ function saveJobs(jobs: Job[]): void {
 }
 
 export async function getJobs(filters?: JobFilterParams): Promise<Job[]> {
-  const jobs = getStoredJobs();
+  let jobs = getStoredJobs();
+
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/jobs', { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.jobs) && data.jobs.length > 0) {
+          jobs = data.jobs;
+          saveJobs(jobs);
+        }
+      }
+    } catch (err) {
+      // Fallback to local storage if API is unreachable
+    }
+  }
+
   if (!filters) return jobs;
 
   let filtered = [...jobs];
@@ -99,13 +115,13 @@ export async function getJobs(filters?: JobFilterParams): Promise<Job[]> {
 }
 
 export async function getJobById(id: string): Promise<Job | null> {
-  const jobs = getStoredJobs();
+  const jobs = await getJobs();
   const job = jobs.find((j) => j.id === id || j.slug === id);
   return job || null;
 }
 
 export async function getJobsByCompany(companyId: string): Promise<Job[]> {
-  const jobs = getStoredJobs();
+  const jobs = await getJobs();
   return jobs.filter((j) => j.companyId === companyId);
 }
 
@@ -118,6 +134,28 @@ export async function createJob(newJobData: Omit<Job, 'id' | 'postedAt' | 'views
     viewsCount: 1,
     applicantCount: 0,
   };
+
+  // Attempt to save to MongoDB Atlas via API
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/jobs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newJob),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.job) {
+          const updated = [data.job, ...jobs];
+          saveJobs(updated);
+          return data.job;
+        }
+      }
+    } catch (err) {
+      console.error('Failed to post job to API, falling back to local storage:', err);
+    }
+  }
+
   const updated = [newJob, ...jobs];
   saveJobs(updated);
   return newJob;

@@ -13,7 +13,6 @@ import { UserRole } from '../../../lib/types';
 import { User, Building2, Lock, Mail, Phone, Briefcase } from 'lucide-react';
 
 export default function RegisterPage() {
-  const { switchRole } = useAuth();
   const { success } = useToast();
   const router = useRouter();
 
@@ -23,23 +22,52 @@ export default function RegisterPage() {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [companyName, setCompanyName] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleRegister = (e: React.FormEvent) => {
+  const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (accountType === 'candidate') {
-      switchRole('candidate');
-      success('Candidate Account Created', 'Welcome to Sallet Hire! Your profile is ready.');
-      router.push('/candidate/dashboard');
-    } else {
-      switchRole('employer');
-      success('Employer Account Created', 'Welcome to Sallet Recruiter ATS!');
-      router.push('/employer/dashboard');
+    setError(null);
+    setIsSubmitting(true);
+
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: fullName,
+          email,
+          password,
+          role: accountType === 'candidate' ? 'candidate' : 'recruiter',
+          phone,
+          companyName,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) {
+        setError(data.error || 'Registration failed. Please try again.');
+        setIsSubmitting(false);
+        return;
+      }
+
+      success(
+        accountType === 'candidate' ? 'Candidate Account Created' : 'Employer Account Created',
+        'Your profile has been saved to the database.'
+      );
+
+      // Navigate to destination
+      window.location.href = data.redirectTo || (accountType === 'candidate' ? '/candidate/dashboard' : '/recruiter/dashboard');
+    } catch (err) {
+      console.error('Registration error:', err);
+      setError('A network error occurred. Please try again.');
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center p-4 sm:p-6 bg-slate-50">
-      <div className="max-w-md w-full bg-white rounded-3xl border border-slate-200/90 shadow-xl p-6 sm:p-8 space-y-6">
+    <div className="min-h-[80vh] flex items-center justify-center p-4 sm:p-6 bg-slate-50 dark:bg-slate-950 transition-colors">
+      <div className="max-w-md w-full bg-white dark:bg-slate-900 rounded-3xl border border-slate-200/90 dark:border-slate-800 shadow-xl p-6 sm:p-8 space-y-6">
         <div className="text-center space-y-2">
           <div className="w-16 h-16 mx-auto flex items-center justify-center">
             <Image
@@ -51,11 +79,17 @@ export default function RegisterPage() {
               priority
             />
           </div>
-          <h1 className="text-2xl font-black text-slate-900 tracking-tight">Join Sallet Hire</h1>
-          <p className="text-xs sm:text-sm text-slate-500">
+          <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight">Join Sallet Hire</h1>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
             Create an account to start applying or hiring top talent
           </p>
         </div>
+
+        {error && (
+          <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-900/60 text-rose-700 dark:text-rose-400 text-xs font-semibold">
+            {error}
+          </div>
+        )}
 
         {/* Account Type Toggle */}
         <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl border border-slate-200">
@@ -135,7 +169,13 @@ export default function RegisterPage() {
             leftIcon={<Lock className="w-4 h-4" />}
           />
 
-          <Button type="submit" variant="primary" size="md" className="w-full font-bold">
+          <Button
+            type="submit"
+            variant="primary"
+            size="md"
+            className="w-full font-bold"
+            isLoading={isSubmitting}
+          >
             {accountType === 'candidate' ? 'Create Candidate Profile' : 'Create Employer ATS Account'}
           </Button>
         </form>

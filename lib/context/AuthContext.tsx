@@ -2,73 +2,119 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, UserRole } from '../types';
-import { DEMO_USERS } from '../mock-data';
 
 interface AuthContextType {
   user: User | null;
   role: UserRole;
   isLoggedIn: boolean;
+  isLoading: boolean;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; redirectTo?: string }>;
+  logout: () => Promise<void>;
   switchRole: (role: UserRole) => void;
   loginAs: (role: UserRole) => void;
-  logout: () => void;
 }
-
-const STORAGE_KEY_AUTH_ROLE = 'sallet_demo_role_v1';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<User | null>(null);
   const [role, setRole] = useState<UserRole>('candidate');
-  const [user, setUser] = useState<User | null>(DEMO_USERS.candidate);
-  const [isMounted, setIsMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
+  // Check current session from backend on mount
   useEffect(() => {
-    setIsMounted(true);
-    try {
-      const savedRole = localStorage.getItem(STORAGE_KEY_AUTH_ROLE) as UserRole;
-      if (savedRole && DEMO_USERS[savedRole]) {
-        setRole(savedRole);
-        setUser(DEMO_USERS[savedRole]);
-      } else {
-        setRole('candidate');
-        setUser(DEMO_USERS.candidate);
+    async function checkAuth() {
+      try {
+        const res = await fetch('/api/auth/me', { cache: 'no-store' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.authenticated && data.user) {
+            setUser(data.user);
+            setRole(data.role as UserRole);
+          } else {
+            setUser(null);
+          }
+        } else {
+          setUser(null);
+        }
+      } catch (err) {
+        console.error('Session check failed:', err);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
       }
-    } catch {
-      setRole('candidate');
-      setUser(DEMO_USERS.candidate);
     }
+    checkAuth();
   }, []);
 
-  const switchRole = (newRole: UserRole) => {
-    setRole(newRole);
-    const newUser = DEMO_USERS[newRole] || null;
-    setUser(newUser);
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem(STORAGE_KEY_AUTH_ROLE, newRole);
-      } catch (err) {
-        console.error('Failed to save role', err);
+  const login = async (
+    email: string,
+    password: string
+  ): Promise<{ success: boolean; error?: string; redirectTo?: string }> => {
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        return {
+          success: false,
+          error: data.error || 'Invalid email or password.',
+        };
       }
+
+      setUser(data.user);
+      setRole(data.role as UserRole);
+
+      return {
+        success: true,
+        redirectTo: data.redirectTo,
+      };
+    } catch (err) {
+      console.error('Login request failed:', err);
+      return {
+        success: false,
+        error: 'Unable to connect to server. Please try again.',
+      };
     }
   };
 
-  const loginAs = (targetRole: UserRole) => {
-    switchRole(targetRole);
+  const logout = async () => {
+    try {
+      await fetch('/api/auth/logout', { method: 'POST' });
+    } catch (err) {
+      console.error('Logout error:', err);
+    } finally {
+      setUser(null);
+      setRole('candidate');
+      window.location.href = '/auth/login';
+    }
   };
 
-  const logout = () => {
-    setUser(null);
+  // Maintained for backward compatibility
+  const switchRole = (newRole: UserRole) => {
+    setRole(newRole);
+  };
+ 
+  const loginAs = (targetRole: UserRole) => {
+    setRole(targetRole);
   };
 
   return (
     <AuthContext.Provider
       value={{
-        user: isMounted ? user : DEMO_USERS.candidate,
-        role: isMounted ? role : 'candidate',
-        isLoggedIn: isMounted ? !!user : true,
+        user,
+        role,
+        isLoggedIn: !!user,
+        isLoading,
+        login,
+        logout,
         switchRole,
         loginAs,
-        logout,
       }}
     >
       {children}

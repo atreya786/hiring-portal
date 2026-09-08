@@ -27,26 +27,43 @@ function saveApplications(apps: Application[]): void {
 }
 
 export async function getApplications(): Promise<Application[]> {
-  return getStoredApplications();
+  let apps = getStoredApplications();
+
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/applications', { cache: 'no-store' });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && Array.isArray(data.applications) && data.applications.length > 0) {
+          apps = data.applications;
+          saveApplications(apps);
+        }
+      }
+    } catch (err) {
+      // Fallback to local storage if API is unreachable
+    }
+  }
+
+  return apps;
 }
 
 export async function getApplicationsByCandidate(candidateId: string = 'cand_01'): Promise<Application[]> {
-  const apps = getStoredApplications();
+  const apps = await getApplications();
   return apps.filter((a) => a.candidateId === candidateId);
 }
 
 export async function getApplicationsByJob(jobId: string): Promise<Application[]> {
-  const apps = getStoredApplications();
+  const apps = await getApplications();
   return apps.filter((a) => a.jobId === jobId);
 }
 
 export async function getApplicationsByCompany(companyId: string): Promise<Application[]> {
-  const apps = getStoredApplications();
+  const apps = await getApplications();
   return apps.filter((a) => a.companyId === companyId);
 }
 
 export async function getApplicationById(id: string): Promise<Application | null> {
-  const apps = getStoredApplications();
+  const apps = await getApplications();
   return apps.find((a) => a.id === id) || null;
 }
 
@@ -95,6 +112,27 @@ export async function applyToJob(params: {
     stage: 'applied',
     timeline,
   };
+
+  // Persist directly to MongoDB Atlas via API
+  if (typeof window !== 'undefined') {
+    try {
+      const res = await fetch('/api/applications', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newApp),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.application) {
+          const updated = [data.application, ...apps];
+          saveApplications(updated);
+          return data.application;
+        }
+      }
+    } catch (err) {
+      console.error('Failed to submit application to API, falling back to local storage:', err);
+    }
+  }
 
   const updated = [newApp, ...apps];
   saveApplications(updated);

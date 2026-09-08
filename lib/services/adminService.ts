@@ -4,7 +4,7 @@ import { DEMO_PLATFORM_STATS } from '../mock-data';
 export async function getPlatformStats(): Promise<PlatformStats> {
   return DEMO_PLATFORM_STATS;
 }
-
+ 
 export async function getRecentAuditLogs(): Promise<
   Array<{ id: string; user: string; role: string; action: string; timestamp: string }>
 > {
@@ -23,7 +23,7 @@ export async function getRecentAuditLogs(): Promise<
       action: 'Submitted application to Sallet IT Soft Pvt. Ltd.',
       timestamp: '25 mins ago',
     },
-    {
+    { 
       id: 'log_3',
       user: 'Ananya Sen (SuperAdmin)',
       role: 'admin',

@@ -7,7 +7,6 @@ import { ToastProvider } from '../lib/context/ToastContext';
 import { JobProvider } from '../lib/context/JobContext';
 import { Navbar } from '../components/layout/Navbar';
 import { Footer } from '../components/layout/Footer';
-import { DemoPersonaBar } from '../components/demo/DemoPersonaBar';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -56,7 +55,6 @@ export default function RootLayout({
                 <Navbar />
                 <main className="flex-1 flex flex-col">{children}</main>
                 <Footer />
-                <DemoPersonaBar />
               </JobProvider>
             </ToastProvider>
           </AuthProvider>
