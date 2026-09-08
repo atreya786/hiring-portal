@@ -82,7 +82,7 @@ export default function PostJobPage() {
     try {
       const newJob = await createJob({
         companyId: 'comp_sallet',
-        companyName: 'Sallet Technologies',
+        companyName: 'Sallet IT Soft Pvt. Ltd.',
         companyLogo: '/logo.png',
         companyVerified: true,
         title: title || 'Senior Software Engineer',
@@ -97,7 +97,7 @@ export default function PostJobPage() {
         salaryMaxLPA: salaryMax,
         isSalaryDisclosed: true,
         jobType,
-        description: description || 'Exciting opportunity to join the engineering team at Sallet Technologies.',
+        description: description || 'Exciting opportunity to join the team at Sallet IT Soft Pvt. Ltd.',
         responsibilities,
         requirements,
         requiredSkills,

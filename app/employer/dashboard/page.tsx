@@ -75,7 +75,7 @@ export default function EmployerDashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200/80 pb-5">
         <div>
           <span className="text-xs font-bold uppercase tracking-wider text-indigo-600">
-            Recruiter ATS Cockpit &bull; Sallet Technologies
+            Recruiter ATS Cockpit &bull; Sallet IT Soft Pvt. Ltd.
           </span>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight mt-0.5">
             Good morning, Priya 👋

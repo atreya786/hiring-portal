@@ -1,7 +1,7 @@
 import { Company } from '../types';
 import { INITIAL_COMPANIES } from '../mock-data';
 
-const STORAGE_KEY_COMPANIES = 'sallet_companies_v1';
+const STORAGE_KEY_COMPANIES = 'sallet_companies_v2';
 
 function getStoredCompanies(): Company[] {
   if (typeof window === 'undefined') return INITIAL_COMPANIES;

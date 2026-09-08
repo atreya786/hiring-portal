@@ -11,7 +11,7 @@ export function JobPreviewCard({ jobData }: JobPreviewCardProps) {
   const dummyJob: Job = {
     id: 'preview_id',
     companyId: 'comp_sallet',
-    companyName: 'Sallet Technologies',
+    companyName: 'Sallet IT Soft Pvt. Ltd.',
     companyLogo: '/logo.png',
     companyVerified: true,
     title: jobData.title || 'Untitled Position',

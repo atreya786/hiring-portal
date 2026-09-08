@@ -100,7 +100,7 @@ export default function RegisterPage() {
               label="Company Name"
               value={companyName}
               onChange={(e) => setCompanyName(e.target.value)}
-              placeholder="e.g. Sallet Technologies"
+              placeholder="e.g. Sallet IT Soft Pvt. Ltd."
               required
               leftIcon={<Building2 className="w-4 h-4" />}
             />

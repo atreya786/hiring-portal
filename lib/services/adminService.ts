@@ -20,7 +20,7 @@ export async function getRecentAuditLogs(): Promise<
       id: 'log_2',
       user: 'Aditya Sharma',
       role: 'candidate',
-      action: 'Submitted application to Sallet Technologies',
+      action: 'Submitted application to Sallet IT Soft Pvt. Ltd.',
       timestamp: '25 mins ago',
     },
     {
@@ -32,9 +32,9 @@ export async function getRecentAuditLogs(): Promise<
     },
     {
       id: 'log_4',
-      user: 'NovaTech Solutions',
+      user: 'Sallet IT Soft Pvt. Ltd.',
       role: 'employer',
-      action: 'Shortlisted 3 candidates for Senior Data Analyst',
+      action: 'Shortlisted candidates for Full Stack Developer',
       timestamp: '2 hours ago',
     },
   ];

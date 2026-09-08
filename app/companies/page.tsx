@@ -37,43 +37,29 @@ export default function CompaniesPage() {
   const industries = [
     'All',
     'IT & Software Development',
-    'FinTech',
-    'Data & Analytics',
-    'Cloud & DevOps',
-    'Design & Creative Tech',
-    'Healthcare Tech',
-    'AgriTech & IoT',
-    'Marketing & Advertising',
   ];
 
   const locations = [
     'All',
-    'Bhubaneswar',
-    'Cuttack',
-    'Bengaluru',
-    'Hyderabad',
-    'Pune',
-    'Mumbai',
-    'Delhi NCR',
-    'Noida',
+    'Bhubaneswar, Odisha',
   ];
 
   return (
-    <div className="bg-slate-50 min-h-screen pb-16">
+    <div className="bg-slate-50 dark:bg-slate-950 min-h-screen pb-16">
       {/* Header Banner */}
-      <div className="bg-white border-b border-slate-200/80 py-8 px-4 sm:px-6 lg:px-8 shadow-2xs">
+      <div className="bg-white dark:bg-slate-900 border-b border-slate-200/80 dark:border-slate-800 py-8 px-4 sm:px-6 lg:px-8 shadow-2xs">
         <div className="max-w-7xl mx-auto space-y-4">
           <Breadcrumbs items={[{ label: 'Companies', href: '/companies' }]} />
 
           <div>
-            <span className="text-xs font-bold uppercase tracking-wider text-indigo-600">
-              Verified Hiring Partners
+            <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
+              Featured Employer
             </span>
-            <h1 className="text-2xl sm:text-4xl font-black text-slate-900 tracking-tight mt-1">
-              Explore Top Companies in India
+            <h1 className="text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight mt-1">
+              Explore Sallet IT Soft Pvt. Ltd.
             </h1>
-            <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
-              Research engineering cultures, employee ratings, benefits, and discover open vacancies from fast-growing startups and enterprises.
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-2xl">
+              Research engineering culture, employee ratings, benefits, and discover active career opportunities directly at Sallet IT Soft Pvt. Ltd.
             </p>
           </div>
 
@@ -86,7 +72,7 @@ export default function CompaniesPage() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search company by name or keyword..."
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3.5 py-2.5 text-xs sm:text-sm text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white"
+                className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-3.5 py-2.5 text-xs sm:text-sm text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-800"
               />
             </div>
 
@@ -94,7 +80,7 @@ export default function CompaniesPage() {
               <select
                 value={selectedIndustry}
                 onChange={(e) => setSelectedIndustry(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 focus:outline-none focus:border-indigo-500 cursor-pointer"
+                className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer"
               >
                 <option value="All">All Industries</option>
                 {industries.filter((i) => i !== 'All').map((ind) => (
@@ -107,7 +93,7 @@ export default function CompaniesPage() {
               <select
                 value={selectedLocation}
                 onChange={(e) => setSelectedLocation(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs text-slate-700 focus:outline-none focus:border-indigo-500 cursor-pointer"
+                className="w-full bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-2.5 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer"
               >
                 <option value="All">All Locations</option>
                 {locations.filter((l) => l !== 'All').map((loc) => (
@@ -122,8 +108,8 @@ export default function CompaniesPage() {
       {/* Companies Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
         <div className="flex items-center justify-between pb-4">
-          <h2 className="text-sm font-bold text-slate-800">
-            Showing {companies.length} Companies
+          <h2 className="text-sm font-bold text-slate-800 dark:text-slate-200">
+            Showing {companies.length} {companies.length === 1 ? 'Company' : 'Companies'}
           </h2>
         </div>
 

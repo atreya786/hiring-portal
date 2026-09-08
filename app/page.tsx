@@ -32,6 +32,8 @@ import {
   Cpu,
   Layers,
   Sparkles,
+  Star,
+  MapPin,
 } from 'lucide-react';
 
 export default function HomePage() {
@@ -85,7 +87,7 @@ export default function HomePage() {
               <span className="flex h-2 w-2 rounded-full bg-indigo-600 dark:bg-indigo-400 animate-ping" />
               <span>Next-Gen Hiring Platform</span>
               <span className="text-slate-300 dark:text-slate-600">&bull;</span>
-              <span className="text-slate-600 dark:text-slate-400 font-medium">Bhubaneswar &bull; Bengaluru &bull; Nationwide</span>
+              <span className="text-slate-600 dark:text-slate-400 font-medium">Bhubaneswar</span>
             </div>
 
             {/* Main Headline */}
@@ -187,7 +189,7 @@ export default function HomePage() {
 
             <Link href="/jobs">
               <Button variant="outline" size="sm" className="font-bold text-xs" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-                View All 1,248 Jobs
+                View All Jobs
               </Button>
             </Link>
           </div>
@@ -252,34 +254,134 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. Featured Companies Showcase */}
+      {/* 5. Featured Employer Spotlight */}
       <section className="py-16 sm:py-20 bg-slate-50/50 dark:bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
             <div>
               <span className="text-xs font-bold uppercase tracking-wider text-indigo-600 dark:text-indigo-400">
-                Top Hiring Partners
+                Featured Employer
               </span>
               <h2 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-                Featured Verified Companies
+                Work With Sallet IT Soft Pvt. Ltd.
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-                Learn about engineering culture, compensation, and open positions directly from verified employers.
+                Learn about our engineering culture, employee benefits, and career opportunities directly at Sallet IT Soft Pvt. Ltd.
               </p>
             </div>
 
-            <Link href="/companies">
+            <Link href="/companies/comp_sallet">
               <Button variant="outline" size="sm" className="font-bold text-xs" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-                Explore All Companies
+                View Company Profile
               </Button>
             </Link>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {companies.slice(0, 6).map((comp) => (
-              <CompanyCard key={comp.id} company={comp} />
-            ))}
-          </div>
+          {companies.length === 1 ? (
+            <div className="bg-white dark:bg-slate-900 rounded-2xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-sm hover:border-indigo-300 dark:hover:border-indigo-500 hover:shadow-lg transition-all duration-200">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                {/* Left Column: Logo & Core Info */}
+                <div className="lg:col-span-7 space-y-5">
+                  <div className="flex items-start gap-4">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-slate-50 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700 p-2 flex items-center justify-center shrink-0 shadow-2xs">
+                      <img
+                        src={companies[0].logo || '/logo.png'}
+                        alt={companies[0].name}
+                        className="w-full h-full object-contain rounded-xl"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                          {companies[0].name}
+                        </h3>
+                        {companies[0].verified && (
+                          <span className="inline-flex items-center gap-1 bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800 text-emerald-700 dark:text-emerald-400 text-xs px-2.5 py-0.5 rounded-full font-bold">
+                            <ShieldCheck className="w-3.5 h-3.5" />
+                            Verified Employer
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs sm:text-sm text-indigo-600 dark:text-indigo-400 font-semibold">
+                        {companies[0].industry} &bull; {companies[0].location}
+                      </p>
+                      <div className="flex items-center gap-1.5 pt-1">
+                        <div className="flex items-center gap-1 bg-amber-50 dark:bg-amber-950/60 border border-amber-200 dark:border-amber-800 px-2.5 py-1 rounded-lg text-amber-800 dark:text-amber-300 text-xs font-bold">
+                          <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-500" />
+                          <span>{companies[0].rating}</span>
+                          <span className="text-[11px] text-amber-600/80 dark:text-amber-400/80 font-normal">
+                            ({companies[0].reviewCount} employee reviews)
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    {companies[0].about}
+                  </p>
+
+                  {/* Highlights */}
+                  <div className="flex flex-wrap gap-2 pt-1">
+                    <span className="text-xs px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-indigo-500 shrink-0" />
+                      Bhubaneswar, Odisha (On-site)
+                    </span>
+                    <span className="text-xs px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">
+                      🚀 Rapid Career Trajectory
+                    </span>
+                    <span className="text-xs px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">
+                      💡 Modern Tech & SaaS Stack
+                    </span>
+                    <span className="text-xs px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-medium">
+                      🏥 Family Health Insurance
+                    </span>
+                  </div>
+                </div>
+
+                {/* Right Column: Stats & Action */}
+                <div className="lg:col-span-5 bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700 rounded-2xl p-6 space-y-6">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-1">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Company Size</span>
+                      <p className="text-sm font-bold text-slate-900 dark:text-white">{companies[0].size}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Founded</span>
+                      <p className="text-sm font-bold text-slate-900 dark:text-white">{companies[0].foundedYear}</p>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Work Mode</span>
+                      <p className="text-sm font-bold text-slate-900 dark:text-white">On-site</p>
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Open Positions</span>
+                      <p className="text-sm font-bold text-indigo-600 dark:text-indigo-400">{companies[0].activeJobsCount} Active Roles</p>
+                    </div>
+                  </div>
+
+                  <div className="pt-2 border-t border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row gap-3">
+                    <Link href="/jobs" className="flex-1">
+                      <Button variant="primary" size="md" className="w-full font-bold justify-center" rightIcon={<ArrowRight className="w-4 h-4" />}>
+                        View Open Jobs
+                      </Button>
+                    </Link>
+                    <Link href={`/companies/${companies[0].id}`} className="flex-1">
+                      <Button variant="outline" size="md" className="w-full font-bold justify-center">
+                        Company Profile
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {companies.slice(0, 6).map((comp) => (
+                <CompanyCard key={comp.id} company={comp} />
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
