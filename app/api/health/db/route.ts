@@ -17,6 +17,7 @@ export async function GET() {
           status: 'error',
           connected: false,
           message: 'Could not connect to MongoDB Atlas database.',
+          error: result.error,
         },
         { status: 503 }
       );

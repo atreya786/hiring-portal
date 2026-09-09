@@ -1,18 +1,18 @@
 import { MongoClient, Db } from 'mongodb';
 import dns from 'dns';
 
-// Fix for Windows / ISP DNS resolution issues with MongoDB Atlas SRV records
+// Configure DNS servers globally as primary fallback for Windows/ISP SRV record blocks
 try {
   dns.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
 } catch {
-  // Ignore in environments where setting custom DNS servers is not permitted
+  // Ignore in restricted environments
 }
 
-const uri = process.env.MONGODB_URI;
+const rawUri = process.env.MONGODB_URI;
 
 const options = {
-  serverSelectionTimeoutMS: 8000,
-  connectTimeoutMS: 8000,
+  serverSelectionTimeoutMS: 10000,
+  connectTimeoutMS: 10000,
   socketTimeoutMS: 30000,
 };
 
@@ -23,8 +23,52 @@ declare global {
 
 let activeClientPromise: Promise<MongoClient> | null = null;
 
+/**
+ * Resolves mongodb+srv:// URIs to direct standard replica set connection strings
+ * using Google & Cloudflare DNS resolvers to avoid Windows loopback DNS querySrv ECONNREFUSED errors.
+ */
+async function resolveSrvUriIfNeeded(connectionUri: string): Promise<string> {
+  if (!connectionUri.startsWith('mongodb+srv://')) {
+    return connectionUri;
+  }
+
+  try {
+    const match = connectionUri.match(/^mongodb\+srv:\/\/([^:]+):([^@]+)@([^/?]+)(\/[^?]*)?(\?.*)?$/);
+    if (!match) return connectionUri;
+
+    const [, user, pass, host, dbPath = '', query = ''] = match;
+    const resolver = new dns.promises.Resolver();
+    resolver.setServers(['8.8.8.8', '8.8.4.4', '1.1.1.1']);
+
+    const srvRecords = await resolver.resolveSrv('_mongodb._tcp.' + host);
+    if (!srvRecords || srvRecords.length === 0) return connectionUri;
+
+    const hosts = srvRecords.map((r) => `${r.name}:${r.port}`).join(',');
+
+    let txtParams = '';
+    try {
+      const txtRecords = await resolver.resolveTxt(host);
+      if (txtRecords && txtRecords.length > 0) {
+        txtParams = txtRecords.flat().join('&');
+      }
+    } catch {
+      // TXT record is optional
+    }
+
+    const cleanDb = dbPath || '/';
+    const existingParams = query ? query.replace(/^\?/, '') : '';
+    const allParams = ['ssl=true', txtParams, existingParams].filter(Boolean).join('&');
+
+    const resolved = `mongodb://${user}:${pass}@${hosts}${cleanDb}${allParams ? '?' + allParams : ''}`;
+    return resolved;
+  } catch (err) {
+    console.warn('Could not pre-resolve SRV records via DNS resolver, proceeding with original URI:', err);
+    return connectionUri;
+  }
+}
+
 export async function getConnectedClient(): Promise<MongoClient> {
-  if (!uri) {
+  if (!rawUri) {
     throw new Error('MONGODB_URI is not defined in environment variables. Please check your .env file.');
   }
 
@@ -43,15 +87,36 @@ export async function getConnectedClient(): Promise<MongoClient> {
 
   activeClientPromise = (async () => {
     try {
-      const client = new MongoClient(uri, options);
+      // 1. Resolve SRV record to standard URI if needed
+      const effectiveUri = await resolveSrvUriIfNeeded(rawUri);
+
+      // 2. Connect using effective URI
+      const client = new MongoClient(effectiveUri, options);
       const connected = await client.connect();
+
       if (process.env.NODE_ENV === 'development') {
         global._mongoClientInstance = connected;
       }
       return connected;
-    } catch (err) {
+    } catch (err: any) {
       activeClientPromise = null;
       global._mongoClientInstance = undefined;
+
+      // If initial connection failed with querySrv error, attempt secondary resolution
+      if (err?.code === 'ECONNREFUSED' && rawUri.startsWith('mongodb+srv://')) {
+        try {
+          const fallbackUri = await resolveSrvUriIfNeeded(rawUri);
+          const fallbackClient = new MongoClient(fallbackUri, options);
+          const connected = await fallbackClient.connect();
+          if (process.env.NODE_ENV === 'development') {
+            global._mongoClientInstance = connected;
+          }
+          return connected;
+        } catch (fallbackErr) {
+          throw fallbackErr;
+        }
+      }
+
       throw err;
     }
   })();
