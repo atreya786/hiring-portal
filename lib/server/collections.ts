@@ -14,84 +14,38 @@ export interface AuthUserRecord {
 
 export type SanitizedUser = Omit<AuthUserRecord, 'passwordHash'>;
 
-// Hashed version of 'Password@123' using bcrypt (salt rounds = 10)
-const DEFAULT_PASSWORD_HASH = '$2b$10$q0m6nJWE27CLC3sHwN2Em.Y9wTsvMfiCqq.FM6Ommn3fYgAz1SCeC';
+// Hashed version of 'Adminsallet@hire26' using bcrypt (salt rounds = 10)
+export const ADMIN_INITIAL_PASSWORD_HASH =
+  '$2b$10$kD6TCAUJS80skQ7SPEgmF.CP8M9wauwTVFcOfizsGZAHNv1Pww2ba';
 
 /**
- * 1. Candidate / Job Seeker Collection
+ * 1. Candidate / Job Seeker Collection (Clean & Empty by default)
  */
-export const candidateCollection: AuthUserRecord[] = [
-  {
-    id: 'usr_cand_01',
-    email: 'candidate@sallet.in',
-    passwordHash: DEFAULT_PASSWORD_HASH,
-    name: 'Aditya Sharma',
-    role: 'candidate',
-    candidateId: 'cand_01',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-    createdAt: '2025-01-10T10:00:00Z',
-  },
-  {
-    id: 'usr_cand_02',
-    email: 'aditya.sharma@example.com',
-    passwordHash: DEFAULT_PASSWORD_HASH,
-    name: 'Aditya Sharma',
-    role: 'candidate',
-    candidateId: 'cand_01',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-    createdAt: '2025-01-10T10:00:00Z',
-  },
-];
+export const candidateCollection: AuthUserRecord[] = [];
 
 /**
- * 2. Recruiter / Employer Collection
+ * 2. Recruiter / Employer Collection (Clean & Empty by default)
  */
-export const recruiterCollection: AuthUserRecord[] = [
-  {
-    id: 'usr_rec_01',
-    email: 'recruiter@sallet.in',
-    passwordHash: DEFAULT_PASSWORD_HASH,
-    name: 'Priya Nair',
-    role: 'recruiter',
-    companyId: 'comp_sallet',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
-    createdAt: '2024-11-15T09:30:00Z',
-  },
-  {
-    id: 'usr_rec_02',
-    email: 'priya.nair@salletitsoft.com',
-    passwordHash: DEFAULT_PASSWORD_HASH,
-    name: 'Priya Nair',
-    role: 'recruiter',
-    companyId: 'comp_sallet',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
-    createdAt: '2024-11-15T09:30:00Z',
-  },
-];
+export const recruiterCollection: AuthUserRecord[] = [];
 
 /**
- * 3. Platform Administrator Collection
+ * 3. Platform Administrator Collection (Contains ONLY initial admin account)
+ * Email: admin@sallet.hire
  */
-export const adminCollection: AuthUserRecord[] = [
+export const administratorCollection: AuthUserRecord[] = [
   {
-    id: 'usr_admin_01',
-    email: 'admin@sallet.in',
-    passwordHash: DEFAULT_PASSWORD_HASH,
-    name: 'Ananya Sen',
+    id: 'usr_admin_root',
+    email: 'admin@sallet.hire',
+    passwordHash: ADMIN_INITIAL_PASSWORD_HASH,
+    name: 'Platform Administrator',
     role: 'admin',
-    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-    createdAt: '2024-08-01T08:00:00Z',
-  },
-  {
-    id: 'usr_admin_02',
-    email: 'ananya.sen@sallethire.com',
-    passwordHash: DEFAULT_PASSWORD_HASH,
-    name: 'Ananya Sen',
-    role: 'admin',
-    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-    createdAt: '2024-08-01T08:00:00Z',
+    avatar:
+      'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
+    createdAt: '2026-09-09T00:00:00Z',
   },
 ];
+
+export const adminCollection = administratorCollection;
 
 function sanitize(user: AuthUserRecord): SanitizedUser {
   const { passwordHash: _, ...safeUser } = user;
@@ -106,11 +60,11 @@ export interface AuthResult {
 
 /**
  * Backend authentication flow checking across the 3 collections in sequence:
- * 1. Candidate collection
- * 2. Recruiter collection
- * 3. Admin collection
+ * 1. candidates
+ * 2. recruiters
+ * 3. administrators
  *
- * First queries MongoDB Atlas; falls back to seed arrays if DB is unavailable.
+ * First queries MongoDB Atlas; falls back to memory arrays if DB is unavailable.
  */
 export async function authenticateAcrossCollections(
   email: string,
@@ -125,7 +79,7 @@ export async function authenticateAcrossCollections(
       seedDatabaseIfEmpty,
       getCandidatesCollection,
       getRecruitersCollection,
-      getAdminsCollection,
+      getAdministratorsCollection,
     } = await import('./db');
 
     await seedDatabaseIfEmpty();
@@ -133,7 +87,7 @@ export async function authenticateAcrossCollections(
     const [candidatesCol, recruitersCol, adminsCol] = await Promise.all([
       getCandidatesCollection(),
       getRecruitersCollection(),
-      getAdminsCollection(),
+      getAdministratorsCollection(),
     ]);
 
     // 1. Check Candidate collection in MongoDB
@@ -164,7 +118,7 @@ export async function authenticateAcrossCollections(
       return null;
     }
 
-    // 3. Check Admin collection in MongoDB
+    // 3. Check Administrators collection in MongoDB
     const adm = await adminsCol.findOne({ email: normalizedEmail });
     if (adm) {
       const isMatch = await bcrypt.compare(plainPassword, adm.passwordHash);
@@ -180,10 +134,10 @@ export async function authenticateAcrossCollections(
 
     return null;
   } catch (dbErr) {
-    console.warn('MongoDB query error, falling back to local collections:', dbErr);
+    console.warn('MongoDB query warning in auth, evaluating fallback collections:', dbErr);
   }
 
-  // Fallback to local memory collections if MongoDB is disconnected
+  // Fallback to local memory collections if MongoDB is temporarily unreachable
   const candidate = candidateCollection.find(
     (u) => u.email.toLowerCase() === normalizedEmail
   );
@@ -214,7 +168,7 @@ export async function authenticateAcrossCollections(
     return null;
   }
 
-  const admin = adminCollection.find(
+  const admin = administratorCollection.find(
     (u) => u.email.toLowerCase() === normalizedEmail
   );
   if (admin) {
@@ -233,7 +187,7 @@ export async function authenticateAcrossCollections(
 }
 
 /**
- * Registers a new user into MongoDB Atlas under the candidate or recruiter collection
+ * Registers a new user into MongoDB Atlas under candidates or recruiters collection
  */
 export async function registerUserInDb(params: {
   email: string;
@@ -252,7 +206,7 @@ export async function registerUserInDb(params: {
       seedDatabaseIfEmpty,
       getCandidatesCollection,
       getRecruitersCollection,
-      getAdminsCollection,
+      getAdministratorsCollection,
     } = await import('./db');
 
     await seedDatabaseIfEmpty();
@@ -260,7 +214,7 @@ export async function registerUserInDb(params: {
     const [candidatesCol, recruitersCol, adminsCol] = await Promise.all([
       getCandidatesCollection(),
       getRecruitersCollection(),
-      getAdminsCollection(),
+      getAdministratorsCollection(),
     ]);
 
     // Ensure unique email across all collections
@@ -301,12 +255,12 @@ export async function registerUserInDb(params: {
 
 export async function getUserById(id: string): Promise<SanitizedUser | null> {
   try {
-    const { getCandidatesCollection, getRecruitersCollection, getAdminsCollection } =
+    const { getCandidatesCollection, getRecruitersCollection, getAdministratorsCollection } =
       await import('./db');
     const [candidatesCol, recruitersCol, adminsCol] = await Promise.all([
       getCandidatesCollection(),
       getRecruitersCollection(),
-      getAdminsCollection(),
+      getAdministratorsCollection(),
     ]);
 
     const cand = await candidatesCol.findOne({ id });
@@ -321,7 +275,7 @@ export async function getUserById(id: string): Promise<SanitizedUser | null> {
     // Fall back to memory
   }
 
-  const allUsers = [...candidateCollection, ...recruiterCollection, ...adminCollection];
+  const allUsers = [...candidateCollection, ...recruiterCollection, ...administratorCollection];
   const user = allUsers.find((u) => u.id === id);
   return user ? sanitize(user) : null;
 }

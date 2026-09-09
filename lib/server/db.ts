@@ -1,14 +1,14 @@
 import { Collection } from 'mongodb';
 import { getDatabase } from './mongodb';
 import { Job, Application, Company } from '../types';
-import { AuthUserRecord, candidateCollection, recruiterCollection, adminCollection } from './collections';
+import { AuthUserRecord, administratorCollection } from './collections';
 import { INITIAL_JOBS, INITIAL_COMPANIES, INITIAL_APPLICATIONS } from '../mock-data';
 
 // Collection names in the MongoDB Atlas "Hiring" database
 export const COLLECTIONS = {
   CANDIDATES: 'candidates',
   RECRUITERS: 'recruiters',
-  ADMINS: 'admins',
+  ADMINISTRATORS: 'administrators',
   JOBS: 'jobs',
   APPLICATIONS: 'applications',
   COMPANIES: 'companies',
@@ -24,10 +24,13 @@ export async function getRecruitersCollection(): Promise<Collection<AuthUserReco
   return db.collection<AuthUserRecord>(COLLECTIONS.RECRUITERS);
 }
 
-export async function getAdminsCollection(): Promise<Collection<AuthUserRecord>> {
+export async function getAdministratorsCollection(): Promise<Collection<AuthUserRecord>> {
   const db = await getDatabase();
-  return db.collection<AuthUserRecord>(COLLECTIONS.ADMINS);
+  return db.collection<AuthUserRecord>(COLLECTIONS.ADMINISTRATORS);
 }
+
+// Alias for backwards compatibility
+export const getAdminsCollection = getAdministratorsCollection;
 
 export async function getJobsCollection(): Promise<Collection<Job>> {
   const db = await getDatabase();
@@ -50,7 +53,8 @@ let lastSeedAttempt = 0;
 
 /**
  * Ensures initial default data exists in MongoDB Atlas collections.
- * Runs once safely if collections are empty.
+ * Candidate and Recruiter collections remain completely empty.
+ * Only the initial administrator account is seeded if empty.
  */
 export async function seedDatabaseIfEmpty(): Promise<void> {
   if (isSeeded) return;
@@ -62,60 +66,36 @@ export async function seedDatabaseIfEmpty(): Promise<void> {
 
   try {
     const [
-      candidatesCol,
-      recruitersCol,
       adminsCol,
       jobsCol,
-      applicationsCol,
       companiesCol,
     ] = await Promise.all([
-      getCandidatesCollection(),
-      getRecruitersCollection(),
-      getAdminsCollection(),
+      getAdministratorsCollection(),
       getJobsCollection(),
-      getApplicationsCollection(),
       getCompaniesCollection(),
     ]);
 
-    // 1. Seed Candidates if empty
-    const candCount = await candidatesCol.countDocuments();
-    if (candCount === 0) {
-      await candidatesCol.insertMany(candidateCollection);
-    }
-
-    // 2. Seed Recruiters if empty
-    const recCount = await recruitersCol.countDocuments();
-    if (recCount === 0) {
-      await recruitersCol.insertMany(recruiterCollection);
-    }
-
-    // 3. Seed Admins if empty
+    // 1. Seed Administrator if empty (admin@sallet.hire ONLY)
     const adminCount = await adminsCol.countDocuments();
-    if (adminCount === 0) {
-      await adminsCol.insertMany(adminCollection);
+    if (adminCount === 0 && administratorCollection.length > 0) {
+      await adminsCol.insertMany(administratorCollection);
     }
 
-    // 4. Seed Jobs if empty (Sallet IT Soft 3 Bhubaneswar roles)
+    // 2. Seed Jobs if empty (Sallet IT Soft 3 Bhubaneswar roles)
     const jobsCount = await jobsCol.countDocuments();
     if (jobsCount === 0) {
       await jobsCol.insertMany(INITIAL_JOBS);
     }
 
-    // 5. Seed Companies if empty
+    // 3. Seed Companies if empty
     const compCount = await companiesCol.countDocuments();
     if (compCount === 0) {
       await companiesCol.insertMany(INITIAL_COMPANIES);
     }
 
-    // 6. Seed Applications if empty
-    const appCount = await applicationsCol.countDocuments();
-    if (appCount === 0 && INITIAL_APPLICATIONS.length > 0) {
-      await applicationsCol.insertMany(INITIAL_APPLICATIONS);
-    }
-
     isSeeded = true;
   } catch (err: any) {
-    console.warn('Database seeding note:', err?.message || err);
+    console.warn('Database initialization note:', err?.message || err);
   } finally {
     isSeeding = false;
   }

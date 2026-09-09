@@ -30,8 +30,11 @@ export async function proxy(request: NextRequest) {
       loginUrl.searchParams.set('from', pathname);
       return NextResponse.redirect(loginUrl);
     }
-    // Block recruiters from candidate dashboard
-    if (payload.role === 'recruiter' || payload.role === 'employer') {
+    // Block non-candidates from candidate dashboard
+    if (payload.role !== 'candidate') {
+      if (payload.role === 'admin') {
+        return NextResponse.redirect(new URL('/admin/dashboard', request.url));
+      }
       return NextResponse.redirect(new URL('/recruiter/dashboard', request.url));
     }
     return NextResponse.next();
@@ -44,21 +47,24 @@ export async function proxy(request: NextRequest) {
       loginUrl.searchParams.set('from', pathname);
       return NextResponse.redirect(loginUrl);
     }
-    // Strict protection: block candidates from accessing recruiter/employer dashboard
-    if (payload.role === 'candidate') {
-      return NextResponse.redirect(new URL('/candidate/dashboard', request.url));
+    // Block non-recruiters from recruiter/employer dashboard
+    if (payload.role !== 'recruiter' && payload.role !== 'employer') {
+      if (payload.role === 'candidate') {
+        return NextResponse.redirect(new URL('/candidate/dashboard', request.url));
+      }
+      return NextResponse.redirect(new URL('/admin/dashboard', request.url));
     }
     return NextResponse.next();
   }
 
-  // 4. Admin Dashboard & Operations Routes
+  // 4. Admin Dashboard & Protected Routes
   if (pathname.startsWith('/admin')) {
     if (!payload) {
       const loginUrl = new URL('/auth/login', request.url);
       loginUrl.searchParams.set('from', pathname);
       return NextResponse.redirect(loginUrl);
     }
-    // Strict protection: block non-admins from admin dashboard
+    // Block non-admins from admin dashboard
     if (payload.role !== 'admin') {
       if (payload.role === 'candidate') {
         return NextResponse.redirect(new URL('/candidate/dashboard', request.url));

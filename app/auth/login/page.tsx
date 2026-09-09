@@ -1,17 +1,17 @@
 'use client';
 
-import React, { useState, Suspense } from 'react';
-import Link from 'next/link';
+import React, { useState, useEffect, Suspense } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '../../../lib/context/AuthContext';
 import { useToast } from '../../../lib/context/ToastContext';
 import { Button } from '../../../components/ui/Button';
 import { Input } from '../../../components/ui/Input';
-import { Mail, Lock, AlertCircle } from 'lucide-react';
+import { Mail, Lock, AlertCircle, Eye, EyeOff } from 'lucide-react';
 
 function LoginForm() {
-  const { login } = useAuth();
+  const { user, role, isLoggedIn, login } = useAuth();
   const { success } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -19,8 +19,22 @@ function LoginForm() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // If already authenticated, redirect to appropriate role dashboard
+  useEffect(() => {
+    if (isLoggedIn && user) {
+      const destination =
+        role === 'admin'
+          ? '/admin/dashboard'
+          : role === 'recruiter' || role === 'employer'
+          ? '/recruiter/dashboard'
+          : '/candidate/dashboard';
+      router.replace(destination);
+    }
+  }, [isLoggedIn, user, role, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,10 +50,10 @@ function LoginForm() {
         return;
       }
 
-      success('Login Successful', 'Welcome back to Sallet Hire.');
+      success('Login Successful', 'Welcome to Sallet Hire.');
 
       // Prefer backend redirectTo, then returnUrl, or default
-      const destination = returnUrl || result.redirectTo || '/candidate/dashboard';
+      const destination = returnUrl || result.redirectTo || '/admin/dashboard';
       router.push(destination);
     } catch (err) {
       console.error('Login submit error:', err);
@@ -79,7 +93,7 @@ function LoginForm() {
           </div>
         )}
 
-        {/* Form: Email, Password, Login Button ONLY */}
+        {/* Form: Email, Password, Show/Hide Password, Login Button ONLY */}
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
             label="Email address"
@@ -89,14 +103,14 @@ function LoginForm() {
               setEmail(e.target.value);
               if (error) setError(null);
             }}
-            placeholder="you@example.com"
+            placeholder="user@example.com"
             required
+            autoComplete="email"
             leftIcon={<Mail className="w-4 h-4" />}
           />
 
           <Input
             label="Password"
-            type="password"
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
@@ -104,20 +118,35 @@ function LoginForm() {
             }}
             placeholder="••••••••"
             required
+            autoComplete="current-password"
             leftIcon={<Lock className="w-4 h-4" />}
+            rightIcon={
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors focus:outline-none cursor-pointer"
+                aria-label={showPassword ? 'Hide password' : 'Show password'}
+                title={showPassword ? 'Hide password' : 'Show password'}
+              >
+                {showPassword ? (
+                  <EyeOff className="w-4 h-4" />
+                ) : (
+                  <Eye className="w-4 h-4" />
+                )}
+              </button>
+            }
           />
 
           <Button
             type="submit"
             variant="primary"
             size="md"
-            className="w-full font-bold shadow-md shadow-indigo-600/20"
+            className="w-full font-bold shadow-md shadow-indigo-600/20 cursor-pointer"
             isLoading={isSubmitting}
           >
             Sign In
           </Button>
         </form>
-
         {/* Footer info */}
         <div className="pt-2 border-t border-slate-100 dark:border-slate-800 space-y-3 text-center">
           <p className="text-xs text-slate-500 dark:text-slate-400">
@@ -126,13 +155,6 @@ function LoginForm() {
               Create account
             </Link>
           </p>
-
-          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/80 text-[11px] text-slate-500 dark:text-slate-400 text-left space-y-1">
-            <p className="font-bold text-slate-700 dark:text-slate-300">Demo Testing Credentials (Password: <code className="text-indigo-600 dark:text-indigo-400 font-mono">Password@123</code>):</p>
-            <p>&bull; Candidate: <code className="font-mono text-slate-700 dark:text-slate-300">candidate@sallet.in</code></p>
-            <p>&bull; Recruiter: <code className="font-mono text-slate-700 dark:text-slate-300">recruiter@sallet.in</code></p>
-            <p>&bull; Admin: <code className="font-mono text-slate-700 dark:text-slate-300">admin@sallet.in</code></p>
-          </div>
         </div>
       </div>
     </div>
