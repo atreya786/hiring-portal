@@ -95,6 +95,14 @@ export interface Job {
   applyEmail?: string;
   applySubject?: string;
   applyBody?: string;
+  order?: number;
+  duration?: string;
+  workHours?: string;
+  whoCanApply?: string[];
+  whatYoullGain?: string[];
+  toolsAndTech?: Record<string, string[]>;
+  selectionProcess?: string;
+  selectionNotes?: string[];
 }
 
 export interface WorkExperience {

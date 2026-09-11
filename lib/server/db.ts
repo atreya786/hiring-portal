@@ -81,16 +81,16 @@ export async function seedDatabaseIfEmpty(): Promise<void> {
       await adminsCol.insertMany(administratorCollection);
     }
 
-    // 2. Seed Jobs if empty (Sallet IT Soft 3 Bhubaneswar roles)
-    const jobsCount = await jobsCol.countDocuments();
-    if (jobsCount === 0) {
-      await jobsCol.insertMany(INITIAL_JOBS);
+    // 2. Seed / Synchronize active jobs (Sallet IT Soft 4 Bhubaneswar roles)
+    for (const job of INITIAL_JOBS) {
+      await jobsCol.updateOne({ id: job.id }, { $set: job }, { upsert: true });
     }
+    const validJobIds = INITIAL_JOBS.map((j) => j.id);
+    await jobsCol.deleteMany({ id: { $nin: validJobIds } });
 
-    // 3. Seed Companies if empty
-    const compCount = await companiesCol.countDocuments();
-    if (compCount === 0) {
-      await companiesCol.insertMany(INITIAL_COMPANIES);
+    // 3. Seed / Synchronize Companies
+    for (const comp of INITIAL_COMPANIES) {
+      await companiesCol.updateOne({ id: comp.id }, { $set: comp }, { upsert: true });
     }
 
     isSeeded = true;

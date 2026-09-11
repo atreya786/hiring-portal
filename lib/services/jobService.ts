@@ -1,7 +1,7 @@
 import { Job, JobFilterParams, JobStatus } from '../types';
 import { INITIAL_JOBS } from '../mock-data';
 
-const STORAGE_KEY_JOBS = 'sallet_jobs_v2';
+const STORAGE_KEY_JOBS = 'sallet_jobs_v3';
 
 function getStoredJobs(): Job[] {
   if (typeof window === 'undefined') return INITIAL_JOBS;
@@ -109,6 +109,8 @@ export async function getJobs(filters?: JobFilterParams): Promise<Job[]> {
     filtered.sort((a, b) => b.salaryMaxLPA - a.salaryMaxLPA);
   } else if (filters.sortBy === 'experience-low') {
     filtered.sort((a, b) => a.minExperienceYears - b.minExperienceYears);
+  } else {
+    filtered.sort((a, b) => (a.order || 99) - (b.order || 99));
   }
 
   return filtered;

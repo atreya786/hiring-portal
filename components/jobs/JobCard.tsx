@@ -173,6 +173,13 @@ export function JobCard({ job, onApplyClick, layout = 'default' }: JobCardProps)
             <span>{job.experience || formatExperience(job.minExperienceYears, job.maxExperienceYears)}</span>
           </div>
 
+          {job.duration && (
+            <div className="flex items-center gap-1.5 font-medium text-indigo-700 dark:text-indigo-400">
+              <Clock className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400 shrink-0" />
+              <span>{job.duration}</span>
+            </div>
+          )}
+
           <div className="flex items-center gap-1.5">
             <Badge variant="secondary" size="sm" className="capitalize text-[11px]">
               {job.workMode}

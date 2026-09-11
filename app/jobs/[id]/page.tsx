@@ -183,6 +183,17 @@ export default function JobDetailPage() {
                       {job.qualification}
                     </span>
                   )}
+                  {job.duration && (
+                    <span className="flex items-center gap-1.5 font-medium text-indigo-700 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 px-2 py-0.5 rounded-md border border-indigo-200 dark:border-indigo-800/60">
+                      <Clock className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                      {job.duration}
+                    </span>
+                  )}
+                  {job.workHours && (
+                    <span className="flex items-center gap-1.5 font-medium text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
+                      <span>{job.workHours}</span>
+                    </span>
+                  )}
                   <Badge variant="secondary" size="md" className="capitalize">
                     {job.workMode}
                   </Badge>
@@ -279,20 +290,147 @@ export default function JobDetailPage() {
                 </ul>
               </div>
 
-              {/* Requirements */}
-              <div className="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
-                <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                  Requirements
-                </h3>
-                <ul className="space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-                  {job.requirements.map((req, idx) => (
-                    <li key={idx} className="flex items-start gap-2.5">
-                      <Check className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
-                      <span>{req}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {/* Who Can Apply? */}
+              {job.whoCanApply && job.whoCanApply.length > 0 ? (
+                <div className="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                    Who Can Apply?
+                  </h3>
+                  <ul className="space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                    {job.whoCanApply.map((item, idx) => (
+                      <li key={idx} className="flex items-start gap-2.5">
+                        <Check className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : job.requirements && job.requirements.length > 0 ? (
+                <div className="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                    Requirements
+                  </h3>
+                  <ul className="space-y-2.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                    {job.requirements.map((req, idx) => (
+                      <li key={idx} className="flex items-start gap-2.5">
+                        <Check className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
+                        <span>{req}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+
+              {/* Technologies & Tools (Categorized if toolsAndTech provided, else standard) */}
+              {job.toolsAndTech ? (
+                <div className="space-y-4 pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                    Technologies & Tools
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                    {Object.entries(job.toolsAndTech).map(([category, tools]) => (
+                      <div
+                        key={category}
+                        className="p-3.5 bg-slate-50/80 dark:bg-slate-800/60 rounded-xl border border-slate-200/70 dark:border-slate-800 space-y-2"
+                      >
+                        <h4 className="text-xs font-bold text-indigo-700 dark:text-indigo-400">
+                          {category}
+                        </h4>
+                        <div className="flex flex-wrap gap-1.5">
+                          {tools.map((tool) => (
+                            <span
+                              key={tool}
+                              className="text-xs font-semibold bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 px-2.5 py-1 rounded-md"
+                            >
+                              {tool}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-4 pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <div>
+                    <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-2.5">
+                      Required Skills & Technologies
+                    </h3>
+                    <div className="flex flex-wrap gap-2">
+                      {job.requiredSkills.map((skill) => (
+                        <span
+                          key={skill}
+                          className="text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-800/60 px-3 py-1.5 rounded-lg"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {job.preferredSkills && job.preferredSkills.length > 0 && (
+                    <div>
+                      <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2.5">
+                        Additional Skills
+                      </h3>
+                      <div className="flex flex-wrap gap-2">
+                        {job.preferredSkills.map((skill) => (
+                          <span
+                            key={skill}
+                            className="text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg"
+                          >
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* What You'll Gain */}
+              {job.whatYoullGain && job.whatYoullGain.length > 0 && (
+                <div className="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                    What You&apos;ll Gain
+                  </h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    {job.whatYoullGain.map((gain, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-start gap-2.5 p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 text-xs sm:text-sm text-slate-700 dark:text-slate-300"
+                      >
+                        <Sparkles className="w-4 h-4 text-indigo-600 dark:text-indigo-400 mt-0.5 shrink-0" />
+                        <span>{gain}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Selection Process */}
+              {job.selectionProcess && (
+                <div className="space-y-3 pt-2 border-t border-slate-100 dark:border-slate-800">
+                  <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+                    Selection Process
+                  </h3>
+                  <div className="p-4 rounded-xl bg-gradient-to-r from-indigo-50/80 to-purple-50/80 dark:from-indigo-950/40 dark:to-purple-950/40 border border-indigo-100 dark:border-indigo-900/50 space-y-3">
+                    <p className="text-xs sm:text-sm font-bold text-indigo-900 dark:text-indigo-200">
+                      {job.selectionProcess}
+                    </p>
+                    {job.selectionNotes && job.selectionNotes.length > 0 && (
+                      <ul className="space-y-1.5 text-xs text-slate-600 dark:text-slate-400 pt-2 border-t border-indigo-100/70 dark:border-indigo-900/40">
+                        {job.selectionNotes.map((note, idx) => (
+                          <li key={idx} className="flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-indigo-500 shrink-0" />
+                            <span>{note}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              )}
 
               {/* Nice to Have */}
               {job.niceToHave && job.niceToHave.length > 0 && (
@@ -310,43 +448,6 @@ export default function JobDetailPage() {
                   </ul>
                 </div>
               )}
-
-              {/* Required Skills */}
-              <div className="space-y-4 pt-2 border-t border-slate-100 dark:border-slate-800">
-                <div>
-                  <h3 className="text-xs font-bold text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-2.5">
-                    Required Skills & Technologies
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {job.requiredSkills.map((skill) => (
-                      <span
-                        key={skill}
-                        className="text-xs font-bold bg-indigo-50 dark:bg-indigo-950/60 text-indigo-700 dark:text-indigo-300 border border-indigo-200/60 dark:border-indigo-800/60 px-3 py-1.5 rounded-lg"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {job.preferredSkills && job.preferredSkills.length > 0 && (
-                  <div>
-                    <h3 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2.5">
-                      Additional Skills
-                    </h3>
-                    <div className="flex flex-wrap gap-2">
-                      {job.preferredSkills.map((skill) => (
-                        <span
-                          key={skill}
-                          className="text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 px-3 py-1.5 rounded-lg"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
 
               {/* Apply via Gmail CTA inside details */}
               <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl">
@@ -449,6 +550,18 @@ export default function JobDetailPage() {
                     </span>
                   </div>
                 )}
+                {job.duration && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400 dark:text-slate-500">Duration</span>
+                    <span className="font-bold text-indigo-600 dark:text-indigo-400">{job.duration}</span>
+                  </div>
+                )}
+                {job.workHours && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-slate-400 dark:text-slate-500">Work Hours</span>
+                    <span className="font-bold text-slate-800 dark:text-slate-200">{job.workHours}</span>
+                  </div>
+                )}
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400 dark:text-slate-500">Job Type</span>
                   <span className="font-bold text-slate-800 dark:text-slate-200 capitalize">
@@ -458,6 +571,10 @@ export default function JobDetailPage() {
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400 dark:text-slate-500">Work Mode</span>
                   <span className="font-bold text-slate-800 dark:text-slate-200 capitalize">{job.workMode}</span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-slate-400 dark:text-slate-500">Openings</span>
+                  <span className="font-bold text-slate-800 dark:text-slate-200">{job.openings} Positions</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-slate-400 dark:text-slate-500">Total Applicants</span>

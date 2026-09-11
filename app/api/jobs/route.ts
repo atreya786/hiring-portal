@@ -7,7 +7,7 @@ export async function GET(request: Request) {
   try {
     await seedDatabaseIfEmpty();
     const jobsCol = await getJobsCollection();
-    const jobs = await jobsCol.find({}).sort({ postedAt: -1 }).toArray();
+    const jobs = await jobsCol.find({}).sort({ order: 1, postedAt: -1 }).toArray();
 
     // Remove MongoDB internal _id or map cleanly
     const sanitizedJobs = jobs.map(({ _id, ...rest }: any) => rest as Job);
