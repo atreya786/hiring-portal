@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import Image from 'next/image';
-import { usePathname } from 'next/navigation';
-import { useAuth } from '../../lib/context/AuthContext';
-import { Button } from '../ui/Button';
+import React, { useState } from "react";
+import Link from "next/link";
+import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useAuth } from "../../lib/context/AuthContext";
+import { Button } from "../ui/Button";
 import {
   Briefcase,
   Building2,
@@ -27,9 +27,9 @@ import {
   LogIn,
   Sun,
   Moon,
-} from 'lucide-react';
-import { cn } from '../../lib/utils';
-import { useTheme } from '../../lib/context/ThemeContext';
+} from "lucide-react";
+import { cn } from "../../lib/utils";
+import { useTheme } from "../../lib/context/ThemeContext";
 
 export function Navbar() {
   const pathname = usePathname();
@@ -39,9 +39,9 @@ export function Navbar() {
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
 
   const navLinks = [
-    { label: 'Find Jobs', href: '/jobs', icon: Briefcase },
-    { label: 'Companies', href: '/companies', icon: Building2 },
-    { label: 'Career Resources', href: '/resources', icon: BookOpen },
+    { label: "Find Jobs", href: "/jobs", icon: Briefcase },
+    { label: "Companies", href: "/companies", icon: Building2 },
+    { label: "Career Resources", href: "/resources", icon: BookOpen },
   ];
 
   return (
@@ -63,7 +63,10 @@ export function Navbar() {
               </div>
               <div className="flex flex-col">
                 <span className="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-none">
-                  Sallet<span className="text-indigo-600 dark:text-indigo-400">Hire</span>
+                  Sallet
+                  <span className="text-indigo-600 dark:text-indigo-400">
+                    Hire
+                  </span>
                 </span>
                 <span className="text-[10px] text-slate-400 dark:text-slate-500 font-medium tracking-wider uppercase mt-0.5">
                   by Sallet IT Soft
@@ -74,17 +77,19 @@ export function Navbar() {
             {/* Desktop Navigation Links */}
             <nav className="hidden md:flex items-center gap-1">
               {navLinks.map((link) => {
-                const isActive = pathname === link.href || (link.href !== '/' && pathname.startsWith(link.href));
+                const isActive =
+                  pathname === link.href ||
+                  (link.href !== "/" && pathname.startsWith(link.href));
                 const Icon = link.icon;
                 return (
                   <Link
                     key={link.href}
                     href={link.href}
                     className={cn(
-                      'flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors',
+                      "flex items-center gap-1.5 px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors",
                       isActive
-                        ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50/70 dark:bg-indigo-950/50'
-                        : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/60 dark:hover:bg-slate-800/60'
+                        ? "text-indigo-600 dark:text-indigo-400 bg-indigo-50/70 dark:bg-indigo-950/50"
+                        : "text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/60 dark:hover:bg-slate-800/60",
                     )}
                   >
                     <Icon className="w-4 h-4 opacity-70" />
@@ -101,17 +106,25 @@ export function Navbar() {
             <button
               type="button"
               onClick={toggleTheme}
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label={
+                theme === "dark"
+                  ? "Switch to light mode"
+                  : "Switch to dark mode"
+              }
+              title={
+                theme === "dark"
+                  ? "Switch to light mode"
+                  : "Switch to dark mode"
+              }
               className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-750 transition-colors cursor-pointer"
             >
-              {theme === 'dark' ? (
+              {theme === "dark" ? (
                 <Sun className="w-4 h-4 text-amber-400 hover:rotate-45 transition-transform" />
               ) : (
                 <Moon className="w-4 h-4 text-slate-700 hover:-rotate-12 transition-transform" />
               )}
             </button>
-            
+
             {!isLoggedIn ? (
               <Link href="/auth/login">
                 <Button
@@ -125,20 +138,7 @@ export function Navbar() {
               </Link>
             ) : (
               <>
-                {role === 'candidate' && (
-                  <Link href="/recruiter/dashboard">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      leftIcon={<Building2 className="w-3.5 h-3.5" />}
-                      className="text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white"
-                    >
-                      For Recruiters
-                    </Button>
-                  </Link>
-                )}
-
-                {(role === 'recruiter' || role === 'employer') && (
+                {(role === "recruiter" || role === "employer") && (
                   <Link href="/employer/post-job">
                     <Button
                       variant="primary"
@@ -159,14 +159,18 @@ export function Navbar() {
                   >
                     <div className="flex flex-col">
                       <span className="text-xs font-bold text-slate-900 dark:text-slate-100 leading-tight">
-                        {user?.name || 'User'}
+                        {user?.name || "User"}
                       </span>
                       <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-medium capitalize">
-                        {role === 'candidate' ? 'Candidate Portal' : role === 'recruiter' || role === 'employer' ? 'Recruiter ATS' : 'Admin Portal'}
+                        {role === "candidate"
+                          ? "Candidate Portal"
+                          : role === "recruiter" || role === "employer"
+                            ? "Recruiter ATS"
+                            : "Admin Portal"}
                       </span>
                     </div>
                     <div className="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs shadow-xs">
-                      {user?.name ? user.name.charAt(0) : 'U'}
+                      {user?.name ? user.name.charAt(0) : "U"}
                     </div>
                     <ChevronDown className="w-3.5 h-3.5 text-slate-400 mr-1" />
                   </button>
@@ -177,11 +181,15 @@ export function Navbar() {
                       onMouseLeave={() => setUserDropdownOpen(false)}
                     >
                       <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800">
-                        <p className="text-xs font-bold text-slate-900 dark:text-slate-100">{user?.name}</p>
-                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{user?.email}</p>
+                        <p className="text-xs font-bold text-slate-900 dark:text-slate-100">
+                          {user?.name}
+                        </p>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">
+                          {user?.email}
+                        </p>
                       </div>
 
-                      {role === 'candidate' && (
+                      {role === "candidate" && (
                         <div className="py-1">
                           <Link
                             href="/candidate/dashboard"
@@ -210,7 +218,7 @@ export function Navbar() {
                         </div>
                       )}
 
-                      {(role === 'recruiter' || role === 'employer') && (
+                      {(role === "recruiter" || role === "employer") && (
                         <div className="py-1">
                           <Link
                             href="/recruiter/dashboard"
@@ -246,8 +254,8 @@ export function Navbar() {
                           </Link>
                         </div>
                       )}
-                        
-                      {role === 'admin' && (
+
+                      {role === "admin" && (
                         <div className="py-1">
                           <Link
                             href="/admin/dashboard"
@@ -285,11 +293,19 @@ export function Navbar() {
             <button
               type="button"
               onClick={toggleTheme}
-              aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
-              title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+              aria-label={
+                theme === "dark"
+                  ? "Switch to light mode"
+                  : "Switch to dark mode"
+              }
+              title={
+                theme === "dark"
+                  ? "Switch to light mode"
+                  : "Switch to dark mode"
+              }
               className="p-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 dark:text-slate-300 dark:hover:text-white dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-750 transition-colors cursor-pointer"
-            > 
-              {theme === 'dark' ? (
+            >
+              {theme === "dark" ? (
                 <Sun className="w-4 h-4 text-amber-400" />
               ) : (
                 <Moon className="w-4 h-4 text-slate-700" />
@@ -299,8 +315,12 @@ export function Navbar() {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
               aria-label="Toggle Navigation Menu"
-            > 
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            >
+              {mobileMenuOpen ? (
+                <X className="w-6 h-6" />
+              ) : (
+                <Menu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
@@ -319,10 +339,10 @@ export function Navbar() {
                   href={link.href}
                   onClick={() => setMobileMenuOpen(false)}
                   className={cn(
-                    'flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold',
+                    "flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold",
                     isActive
-                      ? 'bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400'
-                      : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                      ? "bg-indigo-50 dark:bg-indigo-950/60 text-indigo-600 dark:text-indigo-400"
+                      : "text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800",
                   )}
                 >
                   <Icon className="w-4 h-4 text-slate-500 dark:text-slate-400" />
@@ -347,14 +367,18 @@ export function Navbar() {
             <div className="pt-3 border-t border-slate-100 dark:border-slate-800 space-y-2">
               <div className="px-3 py-1 flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-bold text-slate-900 dark:text-white">{user?.name || 'User'}</p>
-                  <p className="text-[10px] text-slate-500 capitalize">{role} Account</p>
+                  <p className="text-xs font-bold text-slate-900 dark:text-white">
+                    {user?.name || "User"}
+                  </p>
+                  <p className="text-[10px] text-slate-500 capitalize">
+                    {role} Account
+                  </p>
                 </div>
               </div>
               <p className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-3">
                 Your Workspace
               </p>
-              {role === 'candidate' && (
+              {role === "candidate" && (
                 <>
                   <Link
                     href="/candidate/dashboard"
@@ -391,7 +415,7 @@ export function Navbar() {
                 </>
               )}
 
-              {(role === 'employer' || role === 'recruiter') && (
+              {(role === "employer" || role === "recruiter") && (
                 <>
                   <Link
                     href="/recruiter/dashboard"
@@ -420,7 +444,7 @@ export function Navbar() {
                 </>
               )}
 
-              {role === 'admin' && (
+              {role === "admin" && (
                 <Link
                   href="/admin/dashboard"
                   onClick={() => setMobileMenuOpen(false)}
